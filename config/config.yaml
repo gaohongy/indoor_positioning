@@ -1,0 +1,3 @@
+runMode: debug                                  # 开发模式, debug, release, test
+port: :80                                     # HTTP绑定端口
+name: indoor_positioning_apiServer              # API Server的名字
