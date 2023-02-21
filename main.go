@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"github.com/zxmrlc/log"
 )
 
 // 设置命令行参数
@@ -43,5 +44,8 @@ func main() {
 		// set middlwares
 	)
 
-	http.ListenAndServe(viper.GetString("port"), g)
+	log.Infof("Listening and serving HTTP on %s\n", viper.GetString("addr"))
+	// http.ListenAndServe()返回类型是error接口，调用Error()可以输出错误信息
+	// g.Run()内部会调用http.ListenAndServe()
+	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
 }
