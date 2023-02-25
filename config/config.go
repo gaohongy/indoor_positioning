@@ -1,6 +1,8 @@
 package config
 
 import (
+	"indoor_positioning/dao"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"github.com/zxmrlc/log"
@@ -23,6 +25,10 @@ func Init(cfg string) error {
 	// 初始化日志包
 	// 日志初始化需要读取配置文件，故此初始化位于配置文件初始化之后
 	c.initLog()
+
+	// 初始化数据库
+	dao.DB.Init()
+	defer dao.DB.Close() // 延迟关闭数据库，defer确保资源能够被关闭
 
 	// 监控配置文件变化并热加载程序
 	c.watchConfig()
