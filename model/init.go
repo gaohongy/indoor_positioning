@@ -58,6 +58,7 @@ func openDB(username, password, addr, name string) *gorm.DB {
 }
 
 func setupDB(db *gorm.DB) {
+	db.SingularTable(true) // 在gorm中，默认的表名为定义的结构体名首字母大写转小写，然后变为复试，该选项为true则禁止变为复数
 	db.LogMode(viper.GetBool("gormlog"))
 	//db.DB().SetMaxOpenConns(20000) // 用于设置最大打开的连接数，默认值为0表示不限制.设置最大的连接数，可以避免并发太高导致连接mysql出现too many connections的错误。
 	db.DB().SetMaxIdleConns(0) // 用于设置闲置的连接数.设置闲置的连接数则当开启的一个连接使用完成后可以放在池里等候下一次使用。

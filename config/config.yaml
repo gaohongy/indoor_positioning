@@ -13,6 +13,6 @@ log:
 
 db:
   name: indoor_positioning
-  addr: 39.101.75.158:3306
+  addr: 39.101.75.158:2001
   username: root
-  password: 123456
+  password: GHY20010701ghy

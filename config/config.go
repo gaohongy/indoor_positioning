@@ -28,7 +28,8 @@ func Init(cfg string) error {
 
 	// 初始化数据库
 	model.DB.Init()
-	defer model.DB.Close() // 延迟关闭数据库，defer确保资源能够被关闭
+	// TODO https://blog.csdn.net/HYZX_9987/article/details/116698754 这里查询到是数据库提前关闭了
+	// defer model.DB.Close() // 延迟关闭数据库，defer确保资源能够被关闭
 
 	// 监控配置文件变化并热加载程序
 	c.watchConfig()
