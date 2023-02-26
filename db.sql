@@ -56,14 +56,14 @@ CREATE TABLE `indoor_positioning`.`path_point`  (
 
 -- 建AP表
 CREATE TABLE `indoor_positioning`.`ap`  (
-  ` id` int NOT NULL AUTO_INCREMENT COMMENT 'AP_id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'AP_id',
   `ssid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '网络名称',
   `bssid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'AP_MAC地址',
   `grid_point_id` int NOT NULL COMMENT '网格点id',
   `place_id` int NOT NULL COMMENT '场所id',
   `createdate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `updatedate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (` id`),
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`grid_point_id`) REFERENCES `indoor_positioning`.`grid_point` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   FOREIGN KEY (`place_id`) REFERENCES `indoor_positioning`.`place` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 );

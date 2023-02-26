@@ -1,4 +1,4 @@
-package dao
+package model
 
 import (
 	"fmt"
@@ -11,7 +11,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// 可以设置多个数据库连接，只需在结构体中添加即可
 type Database struct {
 	Mysql *gorm.DB
 }

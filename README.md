@@ -12,6 +12,8 @@
 1. 配置文件
 2. 配置配置文件程序
 
+> 关于database初始化代码的放置位置问题，起初我一直觉得应当放在config中才合理，直到需要写user类型的数据库操作接口时，发现需要引用数据库初始化代码中的DB对象，此时如果config.DB显然不太合适，因此还是放置到model中了
+
 ## router
 1. 路由设置
 
@@ -23,11 +25,14 @@ handler <=> Delivery
 service <=> Usecase
 负责完成具体业务逻辑
 
-## dao
-dao <=> repository
-持久层，负责数据库的CURD
+## model
+model <=> repository
+持久层，负责数据库的CURD,同时定义各种类型
 
 ## pkg
 > 工具包
 
 - error：错误码工具
+
+## 说明
+handler/user/user.go 和 model/user.go 区别在于，前者是和user-api相关的请求响应结构，后者是和user相关的数据库操作

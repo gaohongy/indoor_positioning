@@ -1,7 +1,7 @@
 package config
 
 import (
-	"indoor_positioning/dao"
+	"indoor_positioning/model"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -27,8 +27,8 @@ func Init(cfg string) error {
 	c.initLog()
 
 	// 初始化数据库
-	dao.DB.Init()
-	defer dao.DB.Close() // 延迟关闭数据库，defer确保资源能够被关闭
+	model.DB.Init()
+	defer model.DB.Close() // 延迟关闭数据库，defer确保资源能够被关闭
 
 	// 监控配置文件变化并热加载程序
 	c.watchConfig()
@@ -50,22 +50,6 @@ func (c *Config) initConfig() error {
 	}
 
 	return nil
-}
-
-func (c *Config) initLog() {
-	// 从配置文件读取日志配置信息
-	passLagerCfg := log.PassLagerCfg{
-		Writers:        viper.GetString("log.writers"),
-		LoggerLevel:    viper.GetString("log.logger_level"),
-		LoggerFile:     viper.GetString("log.logger_file"),
-		LogFormatText:  viper.GetBool("log.log_format_text"),
-		RollingPolicy:  viper.GetString("log.rollingPolicy"),
-		LogRotateDate:  viper.GetInt("log.log_rotate_date"),
-		LogRotateSize:  viper.GetInt("log.log_rotate_size"),
-		LogBackupCount: viper.GetInt("log.log_backup_count"),
-	}
-
-	log.InitWithConfig(&passLagerCfg)
 }
 
 // 监控配置文件变化并热加载程序

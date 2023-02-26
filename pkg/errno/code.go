@@ -4,11 +4,16 @@ package errno
 var (
 	// Common errors
 	OK                  = &Errno{Code: 0, Message: "OK"}
-	InternalServerError = &Errno{Code: 10001, Message: "Internal server error."}
-	ErrBind             = &Errno{Code: 10002, Message: "Error occurred while binding the request body to the struct."}
+	InternalServerError = &Errno{Code: 10000, Message: "Internal server error."}
+	ErrorBind           = &Errno{Code: 10001, Message: "Error occurred while binding the request body to the struct."}
+
+	//
+	ErrorValidation = &Errno{Code: 20000, Message: "Validation failed."}
+	ErrorDatabase   = &Errno{Code: 20001, Message: "Database error."}
 
 	// user errors
-	ErrUserNotFound = &Errno{Code: 20102, Message: "The user was not found."}
+	ErrorEncrypt      = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password."}
+	ErrorUserNotFound = &Errno{Code: 20101, Message: "The user was not found."}
 )
 
 /*
