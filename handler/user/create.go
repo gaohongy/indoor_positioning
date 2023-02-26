@@ -12,7 +12,7 @@ import (
 
 // Create creates a new user account.
 func Create(ctx *gin.Context) {
-	log.Info("User Create function called.")
+	log.Info("User Create function called")
 
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {

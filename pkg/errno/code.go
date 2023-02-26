@@ -5,15 +5,18 @@ var (
 	// Common errors
 	OK                  = &Errno{Code: 0, Message: "OK"}
 	InternalServerError = &Errno{Code: 10000, Message: "Internal server error"}
-	ErrorBind           = &Errno{Code: 10001, Message: "Error occurred while binding the request body to the struct"}
+	ErrorBind           = &Errno{Code: 10001, Message: "Request binding error"}
 
 	//
 	ErrorValidation = &Errno{Code: 20000, Message: "Validation failed"}
 	ErrorDatabase   = &Errno{Code: 20001, Message: "Database error"}
+	ErrorToken      = &Errno{Code: 20002, Message: "Signing the JSON web token error"}
 
 	// user errors
-	ErrorEncrypt      = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
-	ErrorUserNotFound = &Errno{Code: 20101, Message: "The user was not found"}
+	ErrorEncrypt = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
+	ErrorLogin   = &Errno{Code: 20101, Message: "Wrong username or password"}
+	// ErrorUserNotFound      = &Errno{Code: 20101, Message: "User not found"}
+	// ErrorPasswordIncorrect = &Errno{Code: 20102, Message: "Password incorrect"}
 )
 
 /*

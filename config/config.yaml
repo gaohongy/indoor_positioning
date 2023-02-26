@@ -14,5 +14,8 @@ log:
 db:
   name: indoor_positioning
   addr: 39.101.75.158:2001
+  encoded: utf8mb4
   username: root
   password: GHY20010701ghy
+
+  jwt_secret: 8]2f+C?x|x_UFpe$tqpGm>L6Rw*!uRqD

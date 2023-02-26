@@ -32,6 +32,7 @@ model <=> repository
 ## pkg
 > 工具包
 
+- auth: 身份认证工具
 - error：错误码工具
 
 ## 说明
