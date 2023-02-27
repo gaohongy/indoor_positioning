@@ -5,8 +5,8 @@ CREATE DATABASE `indoor_positioning` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_ge
 CREATE TABLE `indoor_positioning`.`place`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '场所id',
   `place_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '场所详细地址',
-  `longitude` decimal NOT NULL COMMENT '经度',
-  `latitude` decimal NOT NULL COMMENT '纬度',
+  `longitude` decimal(10,6) NOT NULL COMMENT '经度',
+  `latitude` decimal(10,6) NOT NULL COMMENT '纬度',
   `createdate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `updatedate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -28,10 +28,10 @@ CREATE TABLE `indoor_positioning`.`user`  (
 
 
 -- 建网格点表
-CREATE TABLE `indoor_positioning`.`grid_point`  (
+CREATE TABLE `indoor_positioning`.`gridpoint`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '网格点id',
-  `coordinate_x` decimal NOT NULL COMMENT 'x坐标',
-  `coordinate_y` decimal NOT NULL COMMENT 'y坐标',
+  `coordinate_x` decimal(10,6) NOT NULL COMMENT 'x坐标',
+  `coordinate_y` decimal(10,6) NOT NULL COMMENT 'y坐标',
   `coordinate_z` int NOT NULL COMMENT 'z坐标(楼层)',
   `place_id` int NULL COMMENT '场所id',
   `createdate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -42,7 +42,7 @@ CREATE TABLE `indoor_positioning`.`grid_point`  (
 
 
 -- 建路径点表
-CREATE TABLE `indoor_positioning`.`path_point`  (
+CREATE TABLE `indoor_positioning`.`pathpoint`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '路径点id',
   `user_id` int NOT NULL COMMENT '用户id',
   `grid_point_id` int NOT NULL COMMENT '网格点id',
@@ -69,7 +69,7 @@ CREATE TABLE `indoor_positioning`.`ap`  (
 );
 
 -- 建参考点表
-CREATE TABLE `indoor_positioning`.`reference_point`  (
+CREATE TABLE `indoor_positioning`.`referencepoint`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '参考点id',
   `grid_point_id` int NOT NULL COMMENT '网格点id',
   `place_id` int NOT NULL COMMENT '场所id',

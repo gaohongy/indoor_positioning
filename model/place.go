@@ -20,6 +20,7 @@ func (place *Place) Create() error {
 
 func (place *Place) GetId() uint64 {
 	t := &Place{}
+	// TODO 添加查询失败时的处理
 	DB.Mysql.Where("place_address = ?", place.Place_address).Find(&t)
 	return t.Id
 

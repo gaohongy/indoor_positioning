@@ -6,6 +6,7 @@ import (
 	"indoor_positioning/handler/ap"
 	"indoor_positioning/handler/gridpoint"
 	"indoor_positioning/handler/location"
+	"indoor_positioning/handler/pathpoint"
 	"indoor_positioning/handler/place"
 	"indoor_positioning/handler/referencepoint"
 	"indoor_positioning/handler/user"
@@ -44,6 +45,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		p.POST("/ap", ap.Create)
 		p.POST("/referencepoint", referencepoint.Create)
 		p.POST("/gridpoint", gridpoint.Create)
+		p.POST("/pathpoint", pathpoint.Create)
 	}
 
 	l := g.Group("/location")
