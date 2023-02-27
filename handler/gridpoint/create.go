@@ -21,14 +21,16 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
+	// TODO 需要根据用户token解析出place_id
+	place_id := uint64(7)
+
 	gridpoint := model.Gridpoint{
 		Coordinate_x: request.Coordinate_x,
 		Coordinate_y: request.Coordinate_y,
 		Coordinate_z: request.Coordinate_z,
-		// TODO 需要根据用户token解析出place_id
-		Place_id:   7,
-		Createdate: time.Now(),
-		Updatedate: time.Now(),
+		Place_id:     place_id,
+		Createdate:   time.Now(),
+		Updatedate:   time.Now(),
 	}
 
 	// TODO 验证参数合法性

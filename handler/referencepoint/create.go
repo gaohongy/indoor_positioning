@@ -23,8 +23,8 @@ func Create(ctx *gin.Context) {
 
 	// TODO 需要根据用户token解析出place_id
 	place_id := uint64(7)
-	// TODO 在同一个网格点创建多次参考点这种需求或许不存在
-	// 查询所在网格点，当网格点不存在时，新建网格点
+
+	// 创建参考点前，其所在的网格点不一定存在。查询所在网格点，当网格点不存在时，新建网格点
 	gridpoint, err := model.GetGridpoint(request.Coordinate_x, request.Coordinate_y, request.Coordinate_z, place_id)
 	// 查询结果为空err.Error() = "record not found"
 	if err != nil {
