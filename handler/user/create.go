@@ -21,7 +21,6 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 能否在创建对象时自动设置salt
 	user := model.User{
 		Username:   request.Username,
 		Password:   request.Password,

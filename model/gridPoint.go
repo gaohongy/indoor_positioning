@@ -9,7 +9,7 @@ type Gridpoint struct {
 	Coordinate_x float64   `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`
 	Coordinate_y float64   `json:"coordinate_y" gorm:"column:coordinate_y;not null" binding:"required"`
 	Coordinate_z int       `json:"coordinate_z" gorm:"column:coordinate_z;not null" binding:"required"`
-	Place_id     int       `json:"-"`
+	Place_id     uint64    `json:"-"`
 	Createdate   time.Time `gorm:"column:createdate"`
 	Updatedate   time.Time `gorm:"column:updatedate"`
 }
@@ -25,6 +25,15 @@ func (gridpoint *Gridpoint) GetId() uint64 {
 	DB.Mysql.Where("coordinate_x = ? AND coordinate_y = ? AND coordinate_z = ?",
 		gridpoint.Coordinate_x, gridpoint.Coordinate_y, gridpoint.Coordinate_z).Find(&t)
 	return t.Id
+}
+
+// 根据场所id，x，y，z坐标查询某场所的参考点
+func GetGridpoint(coordinate_x float64, coordinate_y float64, coordinate_z int, place_id uint64) (*Gridpoint, error) {
+	gridpoint := &Gridpoint{}
+	// 查询结果为空报错record not found
+	db := DB.Mysql.Where("coordinate_x = ? AND coordinate_y = ? AND coordinate_z = ? AND place_id = ?",
+		coordinate_x, coordinate_y, coordinate_z, place_id).Find(&gridpoint)
+	return gridpoint, db.Error
 }
 
 // TODO 经纬度和地址验证
