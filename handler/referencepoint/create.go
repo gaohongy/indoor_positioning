@@ -10,6 +10,8 @@ import (
 	"github.com/zxmrlc/log"
 )
 
+// TODO 由于添加rss时，可能因为没有对应的ap导致rss插入失败，但是参考点仍然会插入成功，是否考虑采用数据库的事务保证两个操作的原子性
+
 // Create creates a new user account.
 func Create(ctx *gin.Context) {
 	log.Info("Referencepoint Create function called")
@@ -20,7 +22,8 @@ func Create(ctx *gin.Context) {
 		handler.SendResponse(ctx, errno.ErrorBind, nil)
 		return
 	}
-
+	// -------------------------------------------------------------------------------------
+	// 创建参考点
 	// TODO 需要根据用户token解析出place_id
 	place_id := uint64(7)
 
@@ -41,7 +44,7 @@ func Create(ctx *gin.Context) {
 
 		// TODO 网格点如果插入失败，这里直接return是否可以
 		if err := gridpoint.Create(); err != nil {
-			log.Error(errno.ErrorDatabase.Error(), err)
+			log.Error("gridpoint insert error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 			return
 		}
@@ -65,13 +68,50 @@ func Create(ctx *gin.Context) {
 
 	// 参考点数据插入数据库
 	if err := referencepoint.Create(); err != nil {
-		log.Error(errno.ErrorDatabase.Error(), err)
+		log.Error("referencepoint insert error", err)
 		handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 		return
 	}
 
+	referencepoint.Id = referencepoint.GetId()
+	//------------------------------------------------------------------------------------------
+	// 创建rss条目
+	// TODO 打算用一个对象实现多次插入，但是在插入时会报主键重复的错误，或许相同对象插入时会看为相同条目
+	// rss := &model.Rss{
+	// 	Reference_point_id: referencepoint.Id,
+	// 	Createdate:         time.Now(),
+	// 	Updatedate:         time.Now(),
+	// }
+
+	// 依次处理列表中的数据
+	for _, fingerPrint := range request.Rss_list {
+		var ap_id uint64
+		// 查询ap_id,如果ap不存在，则跳过，这里没办法自动添加ap，因为要确定ap位置，必须要人工添加
+		if ap, err := model.GetAp(fingerPrint.Ssid); err != nil {
+			continue
+		} else {
+			ap_id = ap.Id
+		}
+
+		rss := &model.Rss{
+			Rss:                fingerPrint.Rss,
+			Reference_point_id: referencepoint.Id,
+			Ap_id:              ap_id,
+			Createdate:         time.Now(),
+			Updatedate:         time.Now(),
+		}
+
+		if err := rss.Create(); err != nil {
+			log.Error("rss insert error", err)
+			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
+			return
+		}
+	}
+	//---------------------------------------------------------------------------------------
+
+	// 返回参考点id
 	createResponse := CreateResponse{
-		Id: referencepoint.GetId(),
+		Id: referencepoint.Id,
 	}
 
 	// 发送响应

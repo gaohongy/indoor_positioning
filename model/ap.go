@@ -27,7 +27,12 @@ func (ap *Ap) GetId() uint64 {
 	db := DB.Mysql.Where("ssid = ?", ap.Ssid).Find(&t)
 	log.Error("ap.GetId() error", db.Error)
 	return t.Id
+}
 
+func GetAp(ssid string) (*Ap, error) {
+	ap := &Ap{}
+	db := DB.Mysql.Where("ssid = ?", ssid).Find(&ap)
+	return ap, db.Error
 }
 
 // TODO 经纬度和地址验证

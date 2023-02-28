@@ -37,3 +37,5 @@ model <=> repository
 
 ## 说明
 handler/user/user.go 和 model/user.go 区别在于，前者是和user-api相关的请求响应结构，后者是和user相关的数据库操作
+
+需要明白的是，api接口所接收的数据格式是不同于数据库读写的数据格式的。api接口包含哪些数据是由业务逻辑决定的，数据库读写所需数据结构是由数据库表的定义决定的
