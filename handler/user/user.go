@@ -12,3 +12,7 @@ type CreateRequest struct {
 type CreateResponse struct {
 	Username string `json:"username"`
 }
+
+type PutRequest struct {
+	Place_id uint64 `json:"place_id"`
+}

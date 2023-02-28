@@ -57,6 +57,12 @@ func GetUserByUsername(username string) (*User, error) {
 	return user, db.Error
 }
 
+// 修改用户place_id
+func (user *User) Update(place_id uint64) error {
+	db := DB.Mysql.Model(user).Update("place_id", place_id)
+	return db.Error
+}
+
 // TODO 应当验证用户名是否重复
 // 结构体属性合法性校验
 // 目前仅校验Username,Password,Usertype

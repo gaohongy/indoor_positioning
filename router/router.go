@@ -38,6 +38,12 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	g.POST("/user", user.Create)   // 用户注册
 	g.POST("/session", user.Login) // 用户登录
 
+	u := g.Group("/user")
+	u.Use(middleware.AuthMiddleware())
+	{
+		u.PUT("", user.Put)
+	}
+
 	p := g.Group("/place")
 	p.Use(middleware.AuthMiddleware())
 	{
