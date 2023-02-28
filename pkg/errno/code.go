@@ -13,8 +13,9 @@ var (
 	ErrorToken      = &Errno{Code: 20002, Message: "Signing the JSON web token error"}
 
 	// user errors
-	ErrorEncrypt = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
-	ErrorLogin   = &Errno{Code: 20101, Message: "Wrong username or password"}
+	ErrorEncrypt      = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
+	ErrorLogin        = &Errno{Code: 20101, Message: "Wrong username or password"}
+	ErrorTokenInvalid = &Errno{Code: 20102, Message: "Unauthorized"}
 	// ErrorUserNotFound      = &Errno{Code: 20101, Message: "User not found"}
 	// ErrorPasswordIncorrect = &Errno{Code: 20102, Message: "Password incorrect"}
 )

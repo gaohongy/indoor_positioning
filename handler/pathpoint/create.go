@@ -5,6 +5,7 @@ import (
 	"indoor_positioning/handler"
 	"indoor_positioning/model"
 	"indoor_positioning/pkg/errno"
+	"indoor_positioning/pkg/token"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,9 +23,9 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 需要根据用户token解析出user_id 和 place_id
-	user_id := uint64(9)
-	user, _ := model.GetUserById(user_id)
+	// TODO 改变user_id获取方式，或通过中间件实现
+	content, _ := token.ParseRequest(ctx)
+	user, _ := model.GetUserById(content.ID)
 
 	place_id := user.Place_id
 
@@ -55,7 +56,7 @@ func Create(ctx *gin.Context) {
 	}
 
 	pathpoint := model.Pathpoint{
-		User_id:       user_id,
+		User_id:       user.Id,
 		Grid_point_id: gridpoint.Id,
 		Createdate:    time.Now(),
 		Updatedate:    time.Now(),

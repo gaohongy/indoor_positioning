@@ -25,7 +25,9 @@ func (ap *Ap) GetId() uint64 {
 	t := &Ap{}
 	// TODO 添加查询失败时的处理
 	db := DB.Mysql.Where("ssid = ?", ap.Ssid).Find(&t)
-	log.Error("ap.GetId() error", db.Error)
+	if db.Error != nil {
+		log.Error("ap.GetId() error", db.Error)
+	}
 	return t.Id
 }
 

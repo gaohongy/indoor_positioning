@@ -4,6 +4,7 @@ import (
 	"indoor_positioning/handler"
 	"indoor_positioning/model"
 	"indoor_positioning/pkg/errno"
+	"indoor_positioning/pkg/token"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -21,8 +22,11 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 根据用户token解析出place_id
-	place_id := uint64(7)
+	// TODO 改变user_id获取方式，或通过中间件实现
+	content, _ := token.ParseRequest(ctx)
+	user, _ := model.GetUserById(content.ID)
+
+	place_id := user.Place_id
 
 	// 创建AP前，其所在的网格点不一定存在。先查询所在网格点，当网格点不存在时，新建网格点
 	gridpoint, err := model.GetGridpoint(request.Coordinate_x, request.Coordinate_y, request.Coordinate_z, place_id)
@@ -40,7 +44,7 @@ func Create(ctx *gin.Context) {
 
 		// TODO 网格点如果插入失败，这里直接return是否可以
 		if err := gridpoint.Create(); err != nil {
-			log.Error(errno.ErrorDatabase.Error(), err)
+			log.Error("gridpoint insert error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 			return
 		}
