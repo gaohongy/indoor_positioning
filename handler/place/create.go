@@ -43,7 +43,7 @@ func Create(ctx *gin.Context) {
 	}
 
 	createResponse := CreateResponse{
-		Id: place.GetId(),
+		Place_id: place.GetId(),
 	}
 
 	// 发送响应

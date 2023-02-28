@@ -115,7 +115,7 @@ func Create(ctx *gin.Context) {
 
 	// 返回参考点id
 	createResponse := CreateResponse{
-		Id: referencepoint.Id,
+		Referencepoint_id: referencepoint.Id,
 	}
 
 	// 发送响应

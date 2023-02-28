@@ -8,5 +8,5 @@ type CreateRequest struct {
 }
 
 type CreateResponse struct {
-	Id uint64 `json:"id"`
+	Place_id uint64 `json:"place_id"`
 }

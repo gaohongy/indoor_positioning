@@ -11,5 +11,5 @@ type CreateRequest struct {
 }
 
 type CreateResponse struct {
-	Id uint64 `json:"id"`
+	Ap_id uint64 `json:"ap_id"`
 }

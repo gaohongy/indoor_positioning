@@ -51,7 +51,7 @@ func Create(ctx *gin.Context) {
 	}
 
 	createResponse := CreateResponse{
-		Id: gridpoint.GetId(),
+		Gridpoint_id: gridpoint.GetId(),
 	}
 
 	// 发送响应

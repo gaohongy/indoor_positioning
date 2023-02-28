@@ -76,7 +76,7 @@ func Create(ctx *gin.Context) {
 	}
 
 	createResponse := CreateResponse{
-		Id: ap.GetId(),
+		Ap_id: ap.GetId(),
 	}
 
 	// 发送响应

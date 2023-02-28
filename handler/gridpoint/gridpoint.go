@@ -8,5 +8,5 @@ type CreateRequest struct {
 }
 
 type CreateResponse struct {
-	Id uint64 `json:"id"`
+	Gridpoint_id uint64 `json:"gridpoint_id"`
 }

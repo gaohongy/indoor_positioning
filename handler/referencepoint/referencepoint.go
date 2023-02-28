@@ -16,5 +16,5 @@ type CreateRequest struct {
 }
 
 type CreateResponse struct {
-	Id uint64 `json:"id"`
+	Referencepoint_id uint64 `json:"referencepoint_id"`
 }
