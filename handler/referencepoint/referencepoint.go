@@ -1,7 +1,6 @@
 package referencepoint
 
 type fingerPrint struct {
-	Ssid  string `json:"ssid"`
 	Bssid string `json:"bssid"`
 	Rss   int    `json:"rss"`
 }

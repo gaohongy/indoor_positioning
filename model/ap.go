@@ -24,16 +24,16 @@ func (ap *Ap) Create() error {
 func (ap *Ap) GetId() uint64 {
 	t := &Ap{}
 	// TODO 添加查询失败时的处理
-	db := DB.Mysql.Where("ssid = ?", ap.Ssid).Find(&t)
+	db := DB.Mysql.Where("bssid = ?", ap.Bssid).Find(&t)
 	if db.Error != nil {
 		log.Error("ap.GetId() error", db.Error)
 	}
 	return t.Id
 }
 
-func GetAp(ssid string) (*Ap, error) {
+func GetAp(bssid string) (*Ap, error) {
 	ap := &Ap{}
-	db := DB.Mysql.Where("ssid = ?", ssid).Find(&ap)
+	db := DB.Mysql.Where("bssid = ?", bssid).Find(&ap)
 	return ap, db.Error
 }
 
