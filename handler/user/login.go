@@ -25,7 +25,7 @@ func Login(ctx *gin.Context) {
 	}
 
 	// Get the user information by the login username.
-	dbUser, err := model.GetUser(paraUser.Username)
+	dbUser, err := model.GetUserByUsername(paraUser.Username)
 	if err != nil {
 		// 如果需要写日志，需要写清详细信息-用户不存在，反馈给前端信息不能太详细
 		log.Error("username error", err)

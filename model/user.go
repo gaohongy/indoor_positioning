@@ -17,7 +17,7 @@ type User struct {
 	Username   string    `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
 	Password   string    `json:"password" gorm:"column:pwdhash;not null" binding:"required" validate:"min=5,max=128"`
 	Usertype   int       `json:"usertype" validate:"required"`
-	Place_id   int       `json:"-"`
+	Place_id   uint64    `json:"-"`
 	Createdate time.Time `gorm:"column:createdate"`
 	Updatedate time.Time `gorm:"column:updatedate"`
 }
@@ -42,8 +42,15 @@ func (user *User) Create() error {
 	return DB.Mysql.Create(&user).Error
 }
 
+// 根据id获取user
+func GetUserById(id uint64) (*User, error) {
+	user := &User{}
+	db := DB.Mysql.Where("id = ?", id).Find(&user) // 查询结果值存储在user中，返回值是个*gorm.DB
+	return user, db.Error
+}
+
 // 根据username获取user
-func GetUser(username string) (*User, error) {
+func GetUserByUsername(username string) (*User, error) {
 	user := &User{}
 	// TODO 这里的返回值不太能理解为什么是*gorm.DB
 	db := DB.Mysql.Where("username = ?", username).Find(&user) // 查询结果值存储在user中，返回值是个*gorm.DB
