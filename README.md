@@ -35,6 +35,12 @@ model <=> repository
 - auth: 身份认证工具
 - error：错误码工具
 
+## service
+> 目前实现不考虑性能，先完成实现，故service目前是删除状态
+
+一般在 handler 中主要做解析参数、返回数据操作，简单的逻辑也可以在 handler 中做，像新增用户、删除用户、更新用户，代码量不大，所以也可以放在 handler 中。
+有些代码量很大的逻辑就不适合放在 handler 中，因为这样会导致 handler 逻辑不是很清晰，这时候实际处理的部分通常放在 service 包中。比如 LisReferencepoint() 函数
+
 ## 说明
 handler/user/user.go 和 model/user.go 区别在于，前者是和user-api相关的请求响应结构，后者是和user相关的数据库操作
 

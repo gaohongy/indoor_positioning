@@ -31,7 +31,13 @@ func (ap *Ap) GetId() uint64 {
 	return t.Id
 }
 
-func GetAp(bssid string) (*Ap, error) {
+func GetApById(id uint64) (*Ap, error) {
+	ap := &Ap{}
+	db := DB.Mysql.Where("id = ?", id).Find(&ap)
+	return ap, db.Error
+}
+
+func GetApByBssid(bssid string) (*Ap, error) {
 	ap := &Ap{}
 	db := DB.Mysql.Where("bssid = ?", bssid).Find(&ap)
 	return ap, db.Error

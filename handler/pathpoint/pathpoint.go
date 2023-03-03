@@ -1,10 +1,10 @@
 package pathpoint
 
+import "indoor_positioning/model"
+
 // place相关api所需请求响应结构
 type CreateRequest struct {
-	Coordinate_x float64 `json:"coordinate_x"`
-	Coordinate_y float64 `json:"coordinate_y"`
-	Coordinate_z int     `json:"coordinate_z"`
+	model.Coordinate
 }
 
 // type CreateResponse struct {

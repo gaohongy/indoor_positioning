@@ -8,9 +8,11 @@ var (
 	ErrorBind           = &Errno{Code: 10001, Message: "Request binding error"}
 
 	//
-	ErrorValidation = &Errno{Code: 20000, Message: "Validation failed"}
-	ErrorDatabase   = &Errno{Code: 20001, Message: "Database error"}
-	ErrorToken      = &Errno{Code: 20002, Message: "Signing the JSON web token error"}
+	ErrorValidation       = &Errno{Code: 20000, Message: "Validation failed"}
+	ErrorDatabase         = &Errno{Code: 20001, Message: "Database error"}
+	ErrorToken            = &Errno{Code: 20002, Message: "Signing the JSON web token error"}
+	ErrorMissingParameter = &Errno{Code: 20003, Message: "Missing parameter"}
+	ErrorParameterParsing = &Errno{Code: 20004, Message: "Parameter parsing error"}
 
 	// user errors
 	ErrorEncrypt      = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
@@ -18,6 +20,8 @@ var (
 	ErrorTokenInvalid = &Errno{Code: 20102, Message: "Unauthorized"}
 	// ErrorUserNotFound      = &Errno{Code: 20101, Message: "User not found"}
 	// ErrorPasswordIncorrect = &Errno{Code: 20102, Message: "Password incorrect"}
+
+	ErrorAlgorithmCount = &Errno{Code: 20200, Message: "Error Algorithm Count"}
 )
 
 /*

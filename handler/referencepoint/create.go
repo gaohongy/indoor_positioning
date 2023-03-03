@@ -91,7 +91,7 @@ func Create(ctx *gin.Context) {
 	for _, fingerPrint := range request.Rss_list {
 		var ap_id uint64
 		// 查询ap_id,如果ap不存在，则跳过，这里没办法自动添加ap，因为要确定ap位置，必须要人工添加
-		if ap, err := model.GetAp(fingerPrint.Bssid); err != nil {
+		if ap, err := model.GetApByBssid(fingerPrint.Bssid); err != nil {
 			continue
 		} else {
 			ap_id = ap.Id

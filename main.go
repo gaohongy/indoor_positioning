@@ -49,3 +49,5 @@ func main() {
 	// g.Run()内部会调用http.ListenAndServe()
 	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
 }
+
+// TODO 理论上wifi信号是一直在变化的，需要定时刷新参考点的数据，但是这有个问题就是参考点是人工添加的，能否实现自动更新，是否需要添加一些条件来实现自动更新
