@@ -13,13 +13,18 @@ import (
 // 标签中的validate即给出该参数的校验规则
 // 添加db.SingularTable(true)后，user即为对应数据库表名
 type User struct {
-	Id         uint64    `gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Id         uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
 	Username   string    `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
 	Password   string    `json:"password" gorm:"column:pwdhash;not null" binding:"required" validate:"min=5,max=128"`
 	Usertype   int       `json:"usertype" validate:"required"`
-	Place_id   uint64    `json:"-"`
-	Createdate time.Time `gorm:"column:createdate"`
-	Updatedate time.Time `gorm:"column:updatedate"`
+	Place_id   uint64    `json:"place_id"`
+	Createdate time.Time `json:"createdate" gorm:"column:createdate"`
+	Updatedate time.Time `json:"updatedate" gorm:"column:updatedate"`
+}
+
+type User_Brief struct {
+	Id       uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Username string `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
 }
 
 // TODO User的方法必须要在同一文件中生成，所以Encrypt和Compare必须写在这里，为了增强代码易读性，将具体实现放置于pkg的auth下
@@ -61,6 +66,12 @@ func GetUserByUsername(username string) (*User, error) {
 func (user *User) Update(place_id uint64) error {
 	db := DB.Mysql.Model(user).Update("place_id", place_id)
 	return db.Error
+}
+
+func GetUserByPlaceId(place_id int) (*[]User, error) {
+	user_list := &[]User{}
+	db := DB.Mysql.Where("place_id = ?", place_id).Find(&user_list)
+	return user_list, db.Error
 }
 
 // TODO 应当验证用户名是否重复

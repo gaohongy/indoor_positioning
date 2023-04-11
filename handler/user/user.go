@@ -1,5 +1,7 @@
 package user
 
+import "indoor_positioning/model"
+
 // user相关api所需请求响应结构
 
 type CreateRequest struct {
@@ -15,4 +17,8 @@ type CreateResponse struct {
 
 type PutRequest struct {
 	Place_id uint64 `json:"place_id"`
+}
+
+type GetResponse struct {
+	User_list []model.User_Brief `json:"user_list"`
 }
