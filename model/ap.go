@@ -6,14 +6,26 @@ import (
 	"github.com/zxmrlc/log"
 )
 
+// `json:"-"`在查询结构映射为结构体时是不会映射的，也就是没有结果，但是createdate和updatedate似乎不太一样
 type Ap struct {
-	Id            uint64    `gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Id            uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Ssid          string    `json:"ssid" gorm:"column:ssid;not null" binding:"required"`
 	Bssid         string    `json:"bssid" gorm:"column:bssid;not null" binding:"required"`
-	Grid_point_id uint64    `json:"-" gorm:"column:grid_point_id;not null"`
-	Place_id      uint64    `json:"-" gorm:"column:place_id;not null"`
-	Createdate    time.Time `gorm:"column:createdate"`
-	Updatedate    time.Time `gorm:"column:updatedate"`
+	Grid_point_id uint64    `json:"grid_point_id" gorm:"column:grid_point_id;not null"`
+	Place_id      uint64    `json:"place_id" gorm:"column:place_id;not null"`
+	Createdate    time.Time `json:"createdate" gorm:"column:createdate"`
+	Updatedate    time.Time `json:"updatedate" gorm:"column:updatedate"`
+}
+
+type Ap_Detail struct {
+	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Ssid         string    `json:"ssid" gorm:"column:ssid;not null" binding:"required"`
+	Bssid        string    `json:"bssid" gorm:"column:bssid;not null" binding:"required"`
+	Coordinate_x float64   `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`
+	Coordinate_y float64   `json:"coordinate_y" gorm:"column:coordinate_y;not null" binding:"required"`
+	Coordinate_z float64   `json:"coordinate_z" gorm:"column:coordinate_z;not null" binding:"required"`
+	Createdate   time.Time `json:"createdate" gorm:"column:createdate"`
+	Updatedate   time.Time `json:"updatedate" gorm:"column:updatedate"`
 }
 
 // 向数据库插入场所
@@ -41,6 +53,12 @@ func GetApByBssid(bssid string) (*Ap, error) {
 	ap := &Ap{}
 	db := DB.Mysql.Where("bssid = ?", bssid).Find(&ap)
 	return ap, db.Error
+}
+
+func GetApByPlaceId(place_id int) (*[]Ap, error) {
+	ap_list := &[]Ap{}
+	db := DB.Mysql.Where("place_id = ?", place_id).Find(&ap_list)
+	return ap_list, db.Error
 }
 
 // TODO 经纬度和地址验证

@@ -37,6 +37,7 @@ func GetGridpoint(coordinate_x float64, coordinate_y float64, coordinate_z float
 }
 
 func GetGridpointById(id uint64) (*Gridpoint, error) {
+	// QUES 为何这里采用指针，可能是因为传参用指针更节省资源
 	t := &Gridpoint{}
 	// TODO 添加查询失败时的处理
 	db := DB.Mysql.Where("id = ?", id).Find(&t)

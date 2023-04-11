@@ -1,6 +1,8 @@
 package ap
 
-import "indoor_positioning/model"
+import (
+	"indoor_positioning/model"
+)
 
 // 人工添加AP调用
 // ap相关api所需请求响应结构
@@ -12,4 +14,8 @@ type CreateRequest struct {
 
 type CreateResponse struct {
 	Ap_id uint64 `json:"ap_id"`
+}
+
+type GetResponse struct {
+	Ap_list []model.Ap_Detail `json:"ap_list"`
 }
