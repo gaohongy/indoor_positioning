@@ -14,6 +14,15 @@ type Referencepoint struct {
 	Updatedate    time.Time `json:"updatedate" gorm:"column:updatedate"`
 }
 
+type Referencepoint_Detail struct {
+	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Coordinate_x float64   `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`
+	Coordinate_y float64   `json:"coordinate_y" gorm:"column:coordinate_y;not null" binding:"required"`
+	Coordinate_z float64   `json:"coordinate_z" gorm:"column:coordinate_z;not null" binding:"required"`
+	Createdate   time.Time `json:"createdate" gorm:"column:createdate"`
+	Updatedate   time.Time `json:"updatedate" gorm:"column:updatedate"`
+}
+
 // 向数据库插入场所
 func (referencepoint *Referencepoint) Create() error {
 	return DB.Mysql.Create(&referencepoint).Error
