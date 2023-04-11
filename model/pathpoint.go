@@ -5,11 +5,12 @@ import (
 )
 
 type Pathpoint struct {
-	Id            uint64    `gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
-	User_id       uint64    `json:"-"`
-	Grid_point_id uint64    `json:"-"`
-	Createdate    time.Time `gorm:"column:createdate"`
-	Updatedate    time.Time `gorm:"column:updatedate"`
+	Id            uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
+	User_id       uint64    `json:"user_id"`
+	Grid_point_id uint64    `json:"grid_point_id"`
+	Place_id      uint64    `json:"place_id"`
+	Createdate    time.Time `json:"createdate" gorm:"column:createdate"`
+	Updatedate    time.Time `json:"updatedate" gorm:"column:updatedate"`
 }
 
 // 向数据库插入路径点

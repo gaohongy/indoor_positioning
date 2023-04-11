@@ -46,11 +46,13 @@ CREATE TABLE `indoor_positioning`.`pathpoint`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '路径点id',
   `user_id` int NOT NULL COMMENT '用户id',
   `grid_point_id` int NOT NULL COMMENT '网格点id',
+  `place_id` int NULL COMMENT '场所id',
   `createdate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `updatedate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `indoor_positioning`.`user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   FOREIGN KEY (`grid_point_id`) REFERENCES `indoor_positioning`.`grid_point` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  FOREIGN KEY (`place_id`) REFERENCES `indoor_positioning`.`place` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 

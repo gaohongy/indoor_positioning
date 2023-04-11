@@ -58,6 +58,7 @@ func Create(ctx *gin.Context) {
 	pathpoint := model.Pathpoint{
 		User_id:       user.Id,
 		Grid_point_id: gridpoint.Id,
+		Place_id:      place_id,
 		Createdate:    time.Now(),
 		Updatedate:    time.Now(),
 	}
