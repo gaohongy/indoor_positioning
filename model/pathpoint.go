@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Pathpoint struct {
@@ -13,9 +15,30 @@ type Pathpoint struct {
 	Updatedate    time.Time `json:"updatedate" gorm:"column:updatedate"`
 }
 
+type Pathpoint_Detail struct {
+	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
+	Coordinate_x float64   `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`
+	Coordinate_y float64   `json:"coordinate_y" gorm:"column:coordinate_y;not null" binding:"required"`
+	Coordinate_z float64   `json:"coordinate_z" gorm:"column:coordinate_z;not null" binding:"required"`
+	Createdate   time.Time `json:"createdate" gorm:"column:createdate"`
+}
+
 // 向数据库插入路径点
 func (pathpoint *Pathpoint) Create() error {
 	return DB.Mysql.Create(&pathpoint).Error
+}
+
+func FilterPathpointByTimeAndUser(place_id int, user_id int, begin_time time.Time, end_time time.Time) (*[]Pathpoint, error) {
+	pathpoint_list := &[]Pathpoint{}
+	var db *gorm.DB
+
+	if begin_time.IsZero() && end_time.IsZero() { // 无时间筛选条件
+		db = DB.Mysql.Where("place_id = ? AND user_id = ?", place_id, user_id).Find(&pathpoint_list)
+	} else { // 有时间筛选条件
+		db = DB.Mysql.Where("place_id = ? AND user_id = ? AND createdate BETWEEN ? AND ?", place_id, user_id, begin_time, end_time).Find(&pathpoint_list)
+	}
+
+	return pathpoint_list, db.Error
 }
 
 // func (pathpoint *Pathpoint) GetId() uint64 {

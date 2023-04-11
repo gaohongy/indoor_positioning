@@ -19,3 +19,6 @@ db:
   password: GHY20010701ghy
 
   jwt_secret: 8]2f+C?x|x_UFpe$tqpGm>L6Rw*!uRqD
+
+time:
+  layout: "2023-04-10T16:00:00.000Z"

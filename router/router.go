@@ -56,6 +56,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		p.GET("/referencepoint", referencepoint.Get)
 		p.POST("/gridpoint", gridpoint.Create)
 		p.POST("/pathpoint", pathpoint.Create)
+		p.GET("/pathpoint", pathpoint.Get)
 	}
 
 	l := g.Group("/location")
