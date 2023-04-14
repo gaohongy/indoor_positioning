@@ -48,6 +48,11 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
+	loginResponse := LoginResponse{
+		UserType: dbUser.Usertype,
+		Place_id: dbUser.Place_id,
+		Token:    token,
+	}
 	// TODO 返回数据中需要添加用户类型，以便app端可以选择跳转页面
-	handler.SendResponse(ctx, nil, model.Token{Token: token})
+	handler.SendResponse(ctx, nil, loginResponse)
 }

@@ -22,3 +22,9 @@ type PutRequest struct {
 type GetResponse struct {
 	User_list []model.User_Brief `json:"user_list"`
 }
+
+type LoginResponse struct {
+	UserType int    `json:"usertype"`
+	Place_id uint64 `json:"place_id"`
+	Token    string `json:"token"`
+}
