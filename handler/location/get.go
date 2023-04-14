@@ -8,7 +8,7 @@ import (
 	"indoor_positioning/model"
 	"indoor_positioning/pkg/errno"
 	"indoor_positioning/pkg/token"
-	"io/ioutil"
+	"io"
 	"math"
 	"net/http"
 
@@ -163,7 +163,7 @@ func Get(ctx *gin.Context) {
 
 	// 解析响应数据
 	if resp.StatusCode == http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		// 解析python api返回参数
 		var createKnnResponse CreateKnnResponse
