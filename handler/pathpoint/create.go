@@ -16,6 +16,7 @@ import (
 func Create(ctx *gin.Context) {
 	log.Info("Pathpoint Create function called")
 
+	// 解析请求参数
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)

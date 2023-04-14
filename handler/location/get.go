@@ -9,6 +9,7 @@ import (
 	"indoor_positioning/pkg/errno"
 	"indoor_positioning/pkg/token"
 	"io/ioutil"
+	"math"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -171,10 +172,11 @@ func Get(ctx *gin.Context) {
 		// 向客户端返回数据
 		var getResponse GetResponse
 		// TODO 这里后续要考虑处理多组knn计算结果的返回，目前认为每次只是单点计算
+		// NOTE gridsize的存在说明网格密度是固定的，即基本单位是0.01m，目前把所有数据均扩大100倍，也就是存储的数据不存在小数，knn的计算结果出现小数是因为权重的存在，但是实际存储只存储整数部分
 		for _, coordinate_list := range createKnnResponse.Coordinate {
-			getResponse.Coordinate_x = coordinate_list[0]
-			getResponse.Coordinate_y = coordinate_list[1]
-			getResponse.Coordinate_z = coordinate_list[2]
+			getResponse.Coordinate_x = math.Floor(coordinate_list[0])
+			getResponse.Coordinate_y = math.Floor(coordinate_list[1])
+			getResponse.Coordinate_z = math.Floor(coordinate_list[2])
 		}
 
 		handler.SendResponse(ctx, nil, getResponse)
