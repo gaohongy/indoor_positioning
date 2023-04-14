@@ -85,7 +85,7 @@ CREATE TABLE `indoor_positioning`.`referencepoint`  (
 -- 建rss表
 CREATE TABLE `indoor_positioning`.`rss`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '信号强度id',
-  `rss` int NOT NULL COMMENT '信号强度',
+  `rss` decimal(10,6) NOT NULL COMMENT '信号强度',
   `reference_point_id` int NOT NULL COMMENT '参考点id',
   `ap_id` int NOT NULL COMMENT 'AP_id',
   `createdate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',

@@ -50,5 +50,11 @@ handler/user/user.go 和 model/user.go 区别在于，前者是和user-api相关
 // 先写为仅普通用户可以修改place_id
 
 ## 路径点筛选程序逻辑
+> 以下时间格式转换的流程未必正确，大致是这样
+
+1. 前端获取到的是Date()生成的日期，通过toISOString()转为ISO8601格式(go语言的time.Time似乎就是这个格式)，通过encodeURIComponent()解决一些特殊字符无法在url中传输的问题
+2. 后端拿到数据后，通过QueryUnescape将上述转换后的时间字符串还原为原字符串
+3. 通过time.parse()将字符串解析为time.Time格式
+4. 在查询语句中使用time.Time时间格式进行查询
 难点在于时间筛选条件和用户筛选条件并非总是全部都有，需要考虑请求参数为空时的程序运行逻辑
 ![](https://img2023.cnblogs.com/blog/1898659/202304/1898659-20230411223201651-424563567.png)

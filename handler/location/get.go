@@ -39,8 +39,8 @@ func Get(ctx *gin.Context) {
 	json.Unmarshal(decoded, &fingerprints)
 
 	//----------------------------------------------------------------------------
-	var online_rss []int // 在线rss数据
-	var online_rss_list [][]int
+	var online_rss []float64 // 在线rss数据
+	var online_rss_list [][]float64
 	var online_bssid_list []string
 
 	for _, fingerprint := range fingerprints {
@@ -71,14 +71,14 @@ func Get(ctx *gin.Context) {
 	// fmt.Println(referencepoint_list)
 	// return
 
-	var offline_rss_list [][]int          // 离线rss数据，多个参考点的，和在线数据中ap对应的rss值
+	var offline_rss_list [][]float64      // 离线rss数据，多个参考点的，和在线数据中ap对应的rss值
 	var offline_location_list [][]float64 // 和上述rss数组对应的坐标
 
 	for _, referencepoint := range referencepoint_list {
 		// 当前参考点所在网格点
 		gridpoint, _ := model.GetGridpointById(referencepoint.Grid_point_id)
 
-		rss_map := make(map[string]int)
+		rss_map := make(map[string]float64)
 
 		// 查询到该参考点下所有rss条目
 		rss_list, _, _ := model.ListRssByReferencepointid(referencepoint.Id, 0, 0)
@@ -97,7 +97,7 @@ func Get(ctx *gin.Context) {
 		}
 		// return
 
-		var offline_rss []int
+		var offline_rss []float64
 		for _, online_bssid := range online_bssid_list {
 			// 当参考点存在在线数据中的ap时，将该ap在该参考点的rss值加入数组，否则加入0
 			// fmt.Println(online_bssid)

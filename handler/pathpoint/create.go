@@ -52,6 +52,7 @@ func Create(ctx *gin.Context) {
 		}
 
 		// 新插入网格点需要获取id
+		// TODO 可以直接利用插入点时的返回值，可以少查询一次
 		gridpoint.Id = gridpoint.GetId()
 	}
 

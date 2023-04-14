@@ -8,7 +8,7 @@ import (
 
 type Rss struct {
 	Id                 uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
-	Rss                int       `json:"rss" gorm:"column:rss;not null" binding:"required"`
+	Rss                float64   `json:"rss" gorm:"column:rss;not null" binding:"required"`
 	Reference_point_id uint64    `json:"reference_point_id" gorm:"column:reference_point_id"`
 	Ap_id              uint64    `json:"ap_id" gorm:"column:ap_id"`
 	Createdate         time.Time `json:"createdate" gorm:"column:createdate"`
