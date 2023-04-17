@@ -50,6 +50,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	p.Use(middleware.AuthMiddleware())
 	{
 		p.POST("", place.Create)
+		p.GET("", place.Get)
 		p.POST("/ap", ap.Create)
 		p.GET("/ap", ap.Get)
 		p.POST("/referencepoint", referencepoint.Create)
