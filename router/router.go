@@ -37,6 +37,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 	g.POST("/user", user.Create)   // 用户注册
 	g.POST("/session", user.Login) // 用户登录
+	g.GET("/place", place.Get)     // 获取用户列表
 
 	u := g.Group("/user")
 	u.Use(middleware.AuthMiddleware())
@@ -50,7 +51,6 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	p.Use(middleware.AuthMiddleware())
 	{
 		p.POST("", place.Create)
-		p.GET("", place.Get)
 		p.POST("/ap", ap.Create)
 		p.GET("/ap", ap.Get)
 		p.POST("/referencepoint", referencepoint.Create)
