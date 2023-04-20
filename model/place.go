@@ -14,6 +14,7 @@ type Place struct {
 }
 
 type Place_brief struct {
+	Id            uint64  `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Place_address string  `json:"place_address" gorm:"column:place_address;not null" binding:"required"`
 	Longitude     float64 `json:"longitude" gorm:"column:longitude;not null" binding:"required"`
 	Latitude      float64 `json:"latitude" gorm:"column:latitude;not null" binding:"required"`

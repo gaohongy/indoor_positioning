@@ -25,6 +25,7 @@ func Get(ctx *gin.Context) {
 	for _, place_origin := range place_list_origin {
 
 		place_brief := model.Place_brief{
+			Id:            place_origin.Id,
 			Place_address: place_origin.Place_address,
 			Longitude:     place_origin.Longitude,
 			Latitude:      place_origin.Latitude,

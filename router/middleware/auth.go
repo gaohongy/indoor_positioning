@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 目前能够正常请求的条件有二：1.请求header中Authorization字段非空 2.Authorization确实是经过jwt_secret签发得到的token
 func AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// Parse the json web token.
