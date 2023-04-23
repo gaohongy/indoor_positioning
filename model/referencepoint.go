@@ -36,6 +36,12 @@ func (referencepoint *Referencepoint) GetId() uint64 {
 	return t.Id
 }
 
+// 修改AP信息
+func (referencepoint *Referencepoint) Update(grid_point_id uint64) error {
+	db := DB.Mysql.Model(referencepoint).Update(map[string]interface{}{"grid_point_id": grid_point_id})
+	return db.Error
+}
+
 // TODO 经纬度和地址验证
 // 结构体属性合法性校验
 // 目前仅校验Username,Password,Usertype
@@ -43,6 +49,12 @@ func (referencepoint *Referencepoint) GetId() uint64 {
 // 	validate := validator.New()
 // 	return validate.Struct(user)
 // }
+
+func GetReferencepointById(id uint64) (*Referencepoint, error) {
+	referencepoint := &Referencepoint{}
+	db := DB.Mysql.Where("id = ?", id).Find(&referencepoint)
+	return referencepoint, db.Error
+}
 
 // ListUser List all users
 // TODO 这里的查询方式是考虑了分页的，在结果集中数量较多时提高查询速度
