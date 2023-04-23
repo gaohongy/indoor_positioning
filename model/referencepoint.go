@@ -81,3 +81,9 @@ func FilterReferencepointByTime(place_id int, begin_time time.Time, end_time tim
 	db := DB.Mysql.Where("place_id = ? AND createdate BETWEEN ? AND ?", place_id, begin_time, end_time).Find(&referencepoint_list)
 	return referencepoint_list, db.Error
 }
+
+func DeleteReferencepoint(id uint64) error {
+	referencepoint := &Referencepoint{}
+	db := DB.Mysql.Where("id = ?", id).Delete(&referencepoint)
+	return db.Error
+}
