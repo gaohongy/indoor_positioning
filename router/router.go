@@ -54,6 +54,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		p.POST("/ap", ap.Create)
 		p.GET("/ap", ap.Get)
 		p.PUT("/ap", ap.Put)
+		p.DELETE("/ap", ap.Delete)
 		p.POST("/referencepoint", referencepoint.Create)
 		p.GET("/referencepoint", referencepoint.Get)
 		p.POST("/gridpoint", gridpoint.Create)

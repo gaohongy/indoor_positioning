@@ -73,6 +73,12 @@ func FilterApByTime(place_id int, begin_time time.Time, end_time time.Time) (*[]
 	return ap_list, db.Error
 }
 
+func DeleteAp(id uint64) error {
+	ap := &Ap{}
+	db := DB.Mysql.Where("id = ?", id).Delete(&ap)
+	return db.Error
+}
+
 // TODO 经纬度和地址验证
 // 结构体属性合法性校验
 // 目前仅校验Username,Password,Usertype
