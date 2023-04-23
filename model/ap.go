@@ -18,7 +18,7 @@ type Ap struct {
 }
 
 type Ap_Detail struct {
-	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Ssid         string    `json:"ssid" gorm:"column:ssid;not null" binding:"required"`
 	Bssid        string    `json:"bssid" gorm:"column:bssid;not null" binding:"required"`
 	Coordinate_x float64   `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`
@@ -41,6 +41,12 @@ func (ap *Ap) GetId() uint64 {
 		log.Error("ap.GetId() error", db.Error)
 	}
 	return t.Id
+}
+
+// 修改AP信息
+func (ap *Ap) Update(ssid string, bssid string, grid_point_id uint64) error {
+	db := DB.Mysql.Model(ap).Update(map[string]interface{}{"ssid": ssid, "bssid": bssid, "grid_point_id": grid_point_id})
+	return db.Error
 }
 
 func GetApById(id uint64) (*Ap, error) {
