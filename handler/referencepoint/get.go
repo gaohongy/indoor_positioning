@@ -5,6 +5,8 @@ import (
 	"indoor_positioning/model"
 	"indoor_positioning/pkg/errno"
 	"indoor_positioning/pkg/token"
+	"net/url"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/zxmrlc/log"
@@ -16,15 +18,39 @@ func Get(ctx *gin.Context) {
 	// TODO 改变user_id获取方式，或通过中间件实现
 	content, _ := token.ParseRequest(ctx)
 	user, _ := model.GetUserById(content.ID)
-
 	place_id := user.Place_id
 
-	// 查询当前场所所有的参考点
-	referencepoint_list_origin, _, err := model.ListReferencepointByPlaceid(place_id, 0, 0)
-	if err != nil {
-		log.Error("search referencepoint list error", err)
-		handler.SendResponse(ctx, errno.ErrorDatabase, nil)
-		return
+	// 解析请求数据
+	begin_time_encode := ctx.Query("begin_time")
+	end_time_encode := ctx.Query("end_time")
+
+	var referencepoint_list_origin []*model.Referencepoint
+
+	if begin_time_encode != "" && end_time_encode != "" {
+		begin_time_decode, _ := url.QueryUnescape(begin_time_encode)
+		end_time_decode, _ := url.QueryUnescape(end_time_encode)
+		// 将字符串的时间转换为time.Time类型
+		// TODO begin_time 和 end_time解析出来后都是UTC时间，但mysql中的时区未必是UTC，这里需要解决一下
+		begin_time, _ := time.Parse(time.RFC3339, begin_time_decode)
+		end_time, _ := time.Parse(time.RFC3339, end_time_decode)
+
+		var err error
+		referencepoint_list_origin, err = model.FilterReferencepointByTime(int(place_id), begin_time, end_time)
+		if err != nil {
+			// TODO 写入日志错误内容细化
+			log.Error("search ap_list_origin error", err)
+			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
+			return
+		}
+	} else {
+		// 查询当前场所所有的参考点
+		var err error
+		referencepoint_list_origin, _, err = model.ListReferencepointByPlaceid(place_id, 0, 0)
+		if err != nil {
+			log.Error("search referencepoint list error", err)
+			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
+			return
+		}
 	}
 
 	// 构造带有具体坐标的referencepoint_list

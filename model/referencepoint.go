@@ -75,3 +75,9 @@ func ListReferencepointByPlaceid(place_id uint64, limit, offset int) ([]*Referen
 
 	return referencepoints, count, nil
 }
+
+func FilterReferencepointByTime(place_id int, begin_time time.Time, end_time time.Time) ([]*Referencepoint, error) {
+	referencepoint_list := make([]*Referencepoint, 0)
+	db := DB.Mysql.Where("place_id = ? AND createdate BETWEEN ? AND ?", place_id, begin_time, end_time).Find(&referencepoint_list)
+	return referencepoint_list, db.Error
+}
