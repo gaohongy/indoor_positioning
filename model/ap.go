@@ -61,6 +61,12 @@ func GetApByPlaceId(place_id int) (*[]Ap, error) {
 	return ap_list, db.Error
 }
 
+func FilterApByTime(place_id int, begin_time time.Time, end_time time.Time) (*[]Ap, error) {
+	ap_list := &[]Ap{}
+	db := DB.Mysql.Where("place_id = ? AND createdate BETWEEN ? AND ?", place_id, begin_time, end_time).Find(&ap_list)
+	return ap_list, db.Error
+}
+
 // TODO 经纬度和地址验证
 // 结构体属性合法性校验
 // 目前仅校验Username,Password,Usertype
