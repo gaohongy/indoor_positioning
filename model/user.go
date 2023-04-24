@@ -13,7 +13,7 @@ import (
 // 标签中的validate即给出该参数的校验规则
 // 添加db.SingularTable(true)后，user即为对应数据库表名
 type User struct {
-	Id         uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Id         uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Username   string    `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
 	Password   string    `json:"password" gorm:"column:pwdhash;not null" binding:"required" validate:"min=5,max=128"`
 	Usertype   int       `json:"usertype" validate:"required"`
@@ -23,8 +23,9 @@ type User struct {
 }
 
 type User_Brief struct {
-	Id       uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
+	Id       uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Username string `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
+	Usertype int    `json:"usertype" validate:"required"`
 }
 
 // TODO User的方法必须要在同一文件中生成，所以Encrypt和Compare必须写在这里，为了增强代码易读性，将具体实现放置于pkg的auth下

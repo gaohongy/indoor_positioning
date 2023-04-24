@@ -5,7 +5,6 @@ import (
 	"indoor_positioning/model"
 	"indoor_positioning/pkg/errno"
 	"indoor_positioning/pkg/token"
-	"indoor_positioning/pkg/user_type"
 
 	"github.com/gin-gonic/gin"
 	"github.com/zxmrlc/log"
@@ -34,13 +33,14 @@ func Get(ctx *gin.Context) {
 	for _, user_origin := range *user_list_origin {
 
 		// 管理员账户无需返回
-		if user_origin.Usertype == user_type.Admin {
-			continue
-		}
+		// if user_origin.Usertype == user_type.Admin {
+		// 	continue
+		// }
 
 		user_brief := model.User_Brief{
 			Id:       user_origin.Id,
 			Username: user_origin.Username,
+			Usertype: user_origin.Usertype,
 		}
 		user_brief_list = append(user_brief_list, user_brief)
 	}
