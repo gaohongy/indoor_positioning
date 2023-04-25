@@ -1,6 +1,9 @@
 package user
 
-import "indoor_positioning/model"
+import (
+	"indoor_positioning/model"
+	"time"
+)
 
 // user相关api所需请求响应结构
 
@@ -27,4 +30,9 @@ type LoginResponse struct {
 	UserType int    `json:"usertype"`
 	Place_id uint64 `json:"place_id"`
 	Token    string `json:"token"`
+}
+
+type GetUserAmountResponse struct {
+	Date       time.Time `json:"date"`
+	UserAmount uint64    `json:"userAmount"`
 }

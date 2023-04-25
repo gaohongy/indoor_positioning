@@ -75,6 +75,14 @@ func GetUserByPlaceId(place_id int) (*[]User, error) {
 	return user_list, db.Error
 }
 
+func FilterUserByTime(place_id int, begin_time time.Time, end_time time.Time) ([]*User, error) {
+	user_list := make([]*User, 0)
+
+	db := DB.Mysql.Where("place_id = ? AND createdate BETWEEN ? AND ?", place_id, begin_time, end_time).Find(&user_list)
+
+	return user_list, db.Error
+}
+
 // TODO 应当验证用户名是否重复
 // 结构体属性合法性校验
 // 目前仅校验Username,Password,Usertype
