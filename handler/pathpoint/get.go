@@ -57,7 +57,7 @@ func Get(ctx *gin.Context) {
 			return
 		}
 
-		for _, user := range *all_user_list {
+		for _, user := range all_user_list {
 			selected_user_list = append(selected_user_list, int(user.Id))
 		}
 	}

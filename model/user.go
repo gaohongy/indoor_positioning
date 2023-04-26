@@ -23,9 +23,12 @@ type User struct {
 }
 
 type User_Brief struct {
-	Id       uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
-	Username string `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
-	Usertype int    `json:"usertype" validate:"required"`
+	Id         uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
+	Username   string    `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
+	Usertype   int       `json:"usertype" validate:"required"`
+	Place_id   uint64    `json:"place_id"`
+	Createdate time.Time `json:"createdate" gorm:"column:createdate"`
+	Updatedate time.Time `json:"updatedate" gorm:"column:updatedate"`
 }
 
 // TODO User的方法必须要在同一文件中生成，所以Encrypt和Compare必须写在这里，为了增强代码易读性，将具体实现放置于pkg的auth下
@@ -69,8 +72,8 @@ func (user *User) Update(place_id uint64) error {
 	return db.Error
 }
 
-func GetUserByPlaceId(place_id int) (*[]User, error) {
-	user_list := &[]User{}
+func GetUserByPlaceId(place_id int) ([]*User, error) {
+	user_list := make([]*User, 0)
 	db := DB.Mysql.Where("place_id = ?", place_id).Find(&user_list)
 	return user_list, db.Error
 }
