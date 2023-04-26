@@ -86,6 +86,12 @@ func FilterUserByTime(place_id int, begin_time time.Time, end_time time.Time) ([
 	return user_list, db.Error
 }
 
+func DeleteUser(id uint64) error {
+	user := &User{}
+	db := DB.Mysql.Where("id = ?", id).Delete(&user)
+	return db.Error
+}
+
 // TODO 应当验证用户名是否重复
 // 结构体属性合法性校验
 // 目前仅校验Username,Password,Usertype

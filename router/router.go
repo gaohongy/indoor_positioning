@@ -44,6 +44,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	{
 		u.PUT("", user.Put)
 		u.GET("", user.Get)
+		u.DELETE("", user.Delete)
 		u.GET("/count", user.GetCount)
 	}
 
