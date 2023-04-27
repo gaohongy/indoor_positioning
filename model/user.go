@@ -67,8 +67,13 @@ func GetUserByUsername(username string) (*User, error) {
 }
 
 // 修改用户place_id
-func (user *User) Update(place_id uint64) error {
+func (user *User) UpdateUserPlaceId(place_id uint64) error {
 	db := DB.Mysql.Model(user).Update("place_id", place_id)
+	return db.Error
+}
+
+func (user *User) UpdateUserInfo(username string, usertype int) error {
+	db := DB.Mysql.Model(user).Update(map[string]interface{}{"username": username, "usertype": usertype})
 	return db.Error
 }
 

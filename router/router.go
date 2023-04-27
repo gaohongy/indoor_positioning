@@ -42,7 +42,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	u := g.Group("/user")
 	u.Use(middleware.AuthMiddleware())
 	{
-		u.PUT("/place_id", user.PutPlaceId)
+		u.PUT("", user.Put)                 // 管理员修改同一场所用户的信息
+		u.PUT("/place_id", user.PutPlaceId) // 登录用户修改自身场所id
 		u.GET("", user.Get)
 		u.DELETE("", user.Delete)
 		u.GET("/count", user.GetCount)
