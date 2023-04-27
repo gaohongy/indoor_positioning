@@ -43,14 +43,24 @@ func GetCount(ctx *gin.Context) {
 	// date_list 存储map中的key值，方便排序
 	// date_amount_map 存储时间和人数之间的映射
 	var date_list []string
-	date_amount_map := make(map[string]uint64)
+	date_amount_map := make(map[string]UserAmount)
 	for _, user := range user_list {
 		date_string := user.Createdate.Format("2006/01/02")
-		cnt, ok := date_amount_map[date_string]
+		_, ok := date_amount_map[date_string]
 		if ok {
-			date_amount_map[date_string] = cnt + 1
+			useramount := date_amount_map[date_string]
+			if user.Usertype == 0 { // 管理员
+				date_amount_map[date_string] = UserAmount{AdminAmount: useramount.AdminAmount + 1, OrdinaryUserAmount: useramount.OrdinaryUserAmount, SumUserAmount: useramount.SumUserAmount + 1}
+			} else {
+				date_amount_map[date_string] = UserAmount{AdminAmount: useramount.AdminAmount, OrdinaryUserAmount: useramount.OrdinaryUserAmount + 1, SumUserAmount: useramount.SumUserAmount + 1}
+			}
 		} else {
-			date_amount_map[date_string] = 1
+			// 日期以前未出现，说明该日期对应的AdminAmount和OrdinaryUserAmount均不存在，直接赋值为1
+			if user.Usertype == 0 {
+				date_amount_map[date_string] = UserAmount{AdminAmount: 1, OrdinaryUserAmount: 0, SumUserAmount: 1}
+			} else {
+				date_amount_map[date_string] = UserAmount{AdminAmount: 0, OrdinaryUserAmount: 1, SumUserAmount: 1}
+			}
 			date_list = append(date_list, date_string) // 避免时间重复
 		}
 	}
@@ -67,9 +77,12 @@ func GetCount(ctx *gin.Context) {
 	var user_amount_list []GetUserAmountResponse
 	for _, date_string := range date_list {
 		date, _ := time.ParseInLocation("2006/01/02", date_string, time.Local)
+		useramount := date_amount_map[date_string]
 		user_amount := GetUserAmountResponse{
-			Date:       date,
-			UserAmount: date_amount_map[date_string],
+			Date:               date,
+			AdminAmount:        useramount.AdminAmount,
+			OrdinaryUserAmount: useramount.OrdinaryUserAmount,
+			SumUserAmount:      useramount.SumUserAmount,
 		}
 		user_amount_list = append(user_amount_list, user_amount)
 	}

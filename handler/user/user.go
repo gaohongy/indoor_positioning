@@ -39,6 +39,14 @@ type LoginResponse struct {
 }
 
 type GetUserAmountResponse struct {
-	Date       time.Time `json:"date"`
-	UserAmount uint64    `json:"userAmount"`
+	Date               time.Time `json:"date"`
+	AdminAmount        uint64    `json:"adminAmount"`
+	OrdinaryUserAmount uint64    `json:"ordinaryUserAmount"`
+	SumUserAmount      uint64    `json:"sumUserAmount"`
+}
+
+type UserAmount struct {
+	AdminAmount        uint64 `json:"adminAmount"`
+	OrdinaryUserAmount uint64 `json:"ordinaryUserAmount"`
+	SumUserAmount      uint64 `json:"sumUserAmount"`
 }
