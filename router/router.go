@@ -47,6 +47,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		u.GET("", user.Get)
 		u.DELETE("", user.Delete)
 		u.GET("/count", user.GetCount)
+		u.GET("/location", user.GetLocation)
 	}
 
 	// TODO 添加管理员身份认证中间件，但是这里的路由需要细化，因为普通用户是有添加路径点的权限的，那么自然要有添加网格点的权限

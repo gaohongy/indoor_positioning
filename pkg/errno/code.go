@@ -22,6 +22,8 @@ var (
 	// ErrorPasswordIncorrect = &Errno{Code: 20102, Message: "Password incorrect"}
 
 	ErrorAlgorithmCount = &Errno{Code: 20200, Message: "Error Algorithm Count"}
+
+	ErrorRecordNotFound = &Errno{Code: 20200, Message: "Record not found"}
 )
 
 /*
