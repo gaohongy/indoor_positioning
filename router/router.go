@@ -42,7 +42,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	u := g.Group("/user")
 	u.Use(middleware.AuthMiddleware())
 	{
-		u.PUT("", user.Put)
+		u.PUT("/place_id", user.PutPlaceId)
 		u.GET("", user.Get)
 		u.DELETE("", user.Delete)
 		u.GET("/count", user.GetCount)

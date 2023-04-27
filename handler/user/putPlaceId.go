@@ -11,8 +11,8 @@ import (
 )
 
 // Create creates a new user account.
-func Put(ctx *gin.Context) {
-	log.Info("User Put function called")
+func PutPlaceId(ctx *gin.Context) {
+	log.Info("User Put PlaceId function called")
 
 	var request PutRequest
 	if err := ctx.Bind(&request); err != nil {
