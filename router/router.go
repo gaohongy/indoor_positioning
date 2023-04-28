@@ -35,44 +35,63 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		})
 	})
 
-	g.POST("/user", user.Create)   // 用户注册
-	g.POST("/session", user.Login) // 用户登录
-	g.GET("/place", place.Get)     // 获取用户列表
+	/*
+		接口权限声明：
+		public：无需token认证
+		private_all：需token认证（即需登录用户），管理员和普通用户均可访问
+		private_admin：需token认证，仅管理员可访问
+	*/
+	g.POST("/user", user.Create)   // 用户注册（public）
+	g.POST("/session", user.Login) // 用户登录（public）
 
-	u := g.Group("/user")
-	u.Use(middleware.AuthMiddleware())
+	u_pirvate_all := g.Group("/user")
+	u_pirvate_all.Use(middleware.GeneralAuthMiddleware())
 	{
-		u.PUT("", user.Put)                 // 管理员修改同一场所用户的信息
-		u.PUT("/place_id", user.PutPlaceId) // 登录用户修改自身场所id
-		u.GET("", user.Get)                 // 用户管理界面获取当前场所全部用户信息
-		u.DELETE("", user.Delete)
-		u.GET("/count", user.GetCount)
-		u.GET("/location", user.GetLocation)
-		u.GET("/info", user.GetInfo) // 登录用户获取自身信息
+
+		u_pirvate_all.PUT("/place_id", user.PutPlaceId) // 登录用户修改自身场所id（private_all）
+		u_pirvate_all.GET("/info", user.GetInfo)        // 登录用户获取自身信息（private_all）
 	}
 
-	// TODO 添加管理员身份认证中间件，但是这里的路由需要细化，因为普通用户是有添加路径点的权限的，那么自然要有添加网格点的权限
-	p := g.Group("/place")
-	p.Use(middleware.AuthMiddleware())
+	u_pirvate_admin := g.Group("/user")
+	u_pirvate_admin.Use(middleware.AdminAuthMiddleware())
 	{
-		p.POST("", place.Create)
-		p.POST("/ap", ap.Create)
-		p.GET("/ap", ap.Get)
-		p.PUT("/ap", ap.Put)
-		p.DELETE("/ap", ap.Delete)
-		p.POST("/referencepoint", referencepoint.Create)
-		p.GET("/referencepoint", referencepoint.Get)
-		p.DELETE("/referencepoint", referencepoint.Delete)
-		p.PUT("/referencepoint", referencepoint.Put)
-		p.POST("/gridpoint", gridpoint.Create)
-		p.POST("/pathpoint", pathpoint.Create)
-		p.GET("/pathpoint", pathpoint.Get)
+		u_pirvate_admin.PUT("", user.Put)                  // 管理员修改同一场所用户的信息（private_admin）
+		u_pirvate_admin.GET("", user.Get)                  // 用户管理界面获取当前场所全部用户信息（pirvate_admin）
+		u_pirvate_admin.DELETE("", user.Delete)            // 删除用户（private_admin）
+		u_pirvate_admin.GET("/count", user.GetCount)       // 获取当前场所不同时间点各类用户数量（private_admin）
+		u_pirvate_admin.GET("/location", user.GetLocation) // 获取用户最新的位置信息（private_admin）
+	}
+
+	g.GET("/place", place.Get) // 获取用户列表（public）
+
+	// TODO 添加管理员身份认证中间件，但是这里的路由需要细化，因为普通用户是有添加路径点的权限的，那么自然要有添加网格点的权限
+	p_private_all := g.Group("/place")
+	p_private_all.Use(middleware.GeneralAuthMiddleware())
+	{
+		p_private_all.POST("/gridpoint", gridpoint.Create) // 添加网格点（private_all)
+		p_private_all.POST("/pathpoint", pathpoint.Create) // 添加路径点（private_all)
+
+	}
+
+	p_private_admin := g.Group("/place")
+	p_private_admin.Use(middleware.AdminAuthMiddleware())
+	{
+		p_private_admin.POST("", place.Create)                           // 添加场所（private_admin）
+		p_private_admin.POST("/ap", ap.Create)                           // 添加AP（private_admin)
+		p_private_admin.GET("/ap", ap.Get)                               // 获取符合时间条件的AP列表（private_admin)
+		p_private_admin.PUT("/ap", ap.Put)                               // 修改AP信息（private_admin）
+		p_private_admin.DELETE("/ap", ap.Delete)                         // 删除AP（private_admin）
+		p_private_admin.POST("/referencepoint", referencepoint.Create)   // 创建参考点（private_admin）
+		p_private_admin.GET("/referencepoint", referencepoint.Get)       // 获取符合时间条件的参考点列表（private_admin）
+		p_private_admin.DELETE("/referencepoint", referencepoint.Delete) // 删除参考点（private_admin）
+		p_private_admin.PUT("/referencepoint", referencepoint.Put)       // 修改参考点信息（private_admin）
+		p_private_admin.GET("/pathpoint", pathpoint.Get)                 // 获取不同用户的路径点列表（private_admin）
 	}
 
 	l := g.Group("/location")
-	l.Use(middleware.AuthMiddleware())
+	l.Use(middleware.GeneralAuthMiddleware())
 	{
-		l.GET("", location.Get)
+		l.GET("", location.Get) // 获取定位信息（private_all）
 	}
 
 	return g
