@@ -15,9 +15,10 @@ var (
 	ErrorParameterParsing = &Errno{Code: 20004, Message: "Parameter parsing error"}
 
 	// user errors
-	ErrorEncrypt      = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
-	ErrorLogin        = &Errno{Code: 20101, Message: "Wrong username or password"}
-	ErrorTokenInvalid = &Errno{Code: 20102, Message: "Unauthorized"}
+	ErrorEncrypt        = &Errno{Code: 20100, Message: "Error occurred while encrypting the user password"}
+	ErrorLogin          = &Errno{Code: 20101, Message: "Wrong username or password"}
+	ErrorTokenInvalid   = &Errno{Code: 20102, Message: "Unauthorized"}
+	ErrorUsernameRepeat = &Errno{Code: 20103, Message: "Username Repeat"}
 	// ErrorUserNotFound      = &Errno{Code: 20101, Message: "User not found"}
 	// ErrorPasswordIncorrect = &Errno{Code: 20102, Message: "Password incorrect"}
 

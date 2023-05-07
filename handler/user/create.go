@@ -21,6 +21,13 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
+	// 检查是否存在同名用户
+	_, err := model.GetUserByUsername(request.Username)
+	if err == nil { // 用户已存在
+		handler.SendResponse(ctx, errno.ErrorUsernameRepeat, nil)
+		return
+	}
+
 	user := model.User{
 		Username:   request.Username,
 		Password:   request.Password,
