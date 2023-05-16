@@ -61,7 +61,7 @@ func GetApByBssid(bssid string) (*Ap, error) {
 	return ap, db.Error
 }
 
-func GetApByPlaceId(place_id int) (*[]Ap, error) {
+func GetApByPlaceId(place_id uint64) (*[]Ap, error) {
 	ap_list := &[]Ap{}
 	db := DB.Mysql.Where("place_id = ?", place_id).Find(&ap_list)
 	return ap_list, db.Error

@@ -45,7 +45,7 @@ func Get(ctx *gin.Context) {
 	} else { // 无时间筛选条件
 		// 请求ap_list数据
 		var err error
-		ap_list_origin, err = model.GetApByPlaceId(int(place_id))
+		ap_list_origin, err = model.GetApByPlaceId(place_id)
 		if err != nil {
 			// TODO 写入日志错误内容细化
 			log.Error("search ap_list_origin error", err)

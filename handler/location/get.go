@@ -20,6 +20,20 @@ import (
 func Get(ctx *gin.Context) {
 	log.Info("Getlocation function called")
 
+	// TODO 改变user_id获取方式，或通过中间件实现
+	content, _ := token.ParseRequest(ctx)
+	user, _ := model.GetUserById(content.ID)
+	place_id := user.Place_id
+
+	// 查询当前场所所有的AP，创建AP的BSSID集合
+	ap_list, _ := model.GetApByPlaceId(place_id)
+	ap_bssid_set := make(map[string]struct{})
+	for _, ap := range *ap_list {
+		ap_bssid_set[ap.Bssid] = struct{}{}
+	}
+
+	//----------------------------------------------------------------------------
+	// 解析请求参数
 	request := ctx.Query("fingerprint")
 	// TODO 缺少参数时是不是空值
 	if request == "" {
@@ -43,12 +57,22 @@ func Get(ctx *gin.Context) {
 	var online_rss []float64 // 在线rss数据
 	var online_rss_list [][]float64
 	var online_bssid_list []string
-
+	flag := false
 	for _, fingerprint := range fingerprints {
-		online_rss = append(online_rss, fingerprint.Rss)
-		online_bssid_list = append(online_bssid_list, fingerprint.Bssid)
+		if _, ok := ap_bssid_set[fingerprint.Bssid]; ok { // 仅保留处在AP数据库中的AP数据
+			flag = true
+			online_rss = append(online_rss, fingerprint.Rss)
+			online_bssid_list = append(online_bssid_list, fingerprint.Bssid)
+		}
 	}
 	online_rss_list = append(online_rss_list, online_rss)
+	// fmt.Println(online_rss_list)
+	// fmt.Println(online_bssid_list)
+	// 待定位点采集的AP同AP数据库无交集
+	if !flag {
+		handler.SendResponse(ctx, errno.ErrorAlgorithmCount, nil)
+		return
+	}
 
 	// TEST 在线数据
 	// fmt.Println(online_rss_list)   // [[-8 -8]]
@@ -56,18 +80,13 @@ func Get(ctx *gin.Context) {
 	// return
 
 	//----------------------------------------------------------------------------
-	// TODO 改变user_id获取方式，或通过中间件实现
-	content, _ := token.ParseRequest(ctx)
-	user, _ := model.GetUserById(content.ID)
-
-	place_id := user.Place_id
-
 	// 查询当前场所所有的参考点
 	referencepoint_list, _, err := model.ListReferencepointByPlaceid(place_id, 0, 0)
 	if err != nil {
 		log.Error("referencepoint list error", err)
 		return
 	}
+
 	// TEST referencepoint_list
 	// fmt.Println(referencepoint_list)
 	// return
@@ -98,11 +117,12 @@ func Get(ctx *gin.Context) {
 		}
 		// return
 
+		// 在处理在线数据时，已经对待定位点采集的AP进行了筛选，此时online_bssid_list中的AP都存在于AP数据库
 		var offline_rss []float64
 		for _, online_bssid := range online_bssid_list {
 			// 当参考点存在在线数据中的ap时，将该ap在该参考点的rss值加入数组，否则加入0
 			// fmt.Println(online_bssid)
-			if value, ok := rss_map[online_bssid]; ok {
+			if value, ok := rss_map[online_bssid]; ok { // 当前bssid对应AP被当前参考点采集到
 				offline_rss = append(offline_rss, value)
 			} else {
 				offline_rss = append(offline_rss, 0)
@@ -146,6 +166,7 @@ func Get(ctx *gin.Context) {
 	// fmt.Println(online_rss_list)
 
 	jsonData, _ := json.Marshal(createKnnRequest)
+	print(jsonData)
 	url := "http://localhost:8000/count"
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer(jsonData))
 	if err != nil {
