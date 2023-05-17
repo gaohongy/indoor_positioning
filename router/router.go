@@ -35,15 +35,14 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		})
 	})
 
-	/*
-		接口权限声明：
-		public：无需token认证
-		private_all：需token认证（即需登录用户），管理员和普通用户均可访问
-		private_admin：需token认证，仅管理员可访问
-	*/
+	//	接口权限声明：
+	//	public：无需token认证
+	//	private_all：需token认证（即需登录用户），管理员和普通用户均可访问
+	//	private_admin：需token认证，仅管理员可访问
 	g.POST("/user", user.Create)   // 用户注册（public）
 	g.POST("/session", user.Login) // 用户登录（public）
 
+	// 需token认证，管理员和普通用户均可访问的用户相关API
 	u_pirvate_all := g.Group("/user")
 	u_pirvate_all.Use(middleware.GeneralAuthMiddleware())
 	{
@@ -52,6 +51,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		u_pirvate_all.GET("/info", user.GetInfo)        // 登录用户获取自身信息（private_all）
 	}
 
+	// 需token认证，仅管理员可访问的用户相关API
 	u_pirvate_admin := g.Group("/user")
 	u_pirvate_admin.Use(middleware.AdminAuthMiddleware())
 	{
@@ -62,9 +62,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		u_pirvate_admin.GET("/location", user.GetLocation) // 获取用户最新的位置信息（private_admin）
 	}
 
+	// 无需认证的用户相关API
 	g.GET("/place", place.Get) // 获取用户列表（public）
 
-	// TODO 添加管理员身份认证中间件，但是这里的路由需要细化，因为普通用户是有添加路径点的权限的，那么自然要有添加网格点的权限
+	// 需token认证，管理员和普通用户均可访问的场所相关API
 	p_private_all := g.Group("/place")
 	p_private_all.Use(middleware.GeneralAuthMiddleware())
 	{
@@ -73,6 +74,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 	}
 
+	// 需token认证，仅管理员可访问的场所相关API
 	p_private_admin := g.Group("/place")
 	p_private_admin.Use(middleware.AdminAuthMiddleware())
 	{
@@ -88,6 +90,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		p_private_admin.GET("/pathpoint", pathpoint.Get)                 // 获取不同用户的路径点列表（private_admin）
 	}
 
+	// 需token认证，管理员和普通用户均可访问的定位API
 	l := g.Group("/location")
 	l.Use(middleware.GeneralAuthMiddleware())
 	{
