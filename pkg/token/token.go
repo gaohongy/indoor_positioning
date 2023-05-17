@@ -12,30 +12,32 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Context is the context of the JSON web token.
+// Context	JSON Web Token负载部分内容
 type Context struct {
-	ID uint64
+	ID uint64 // 用户ID
 }
 
-// Sign signs the context with the specified secret.
+// @title	Sign
+// @description	Sign signs the context with the specified secret.
+// @auth	高宏宇
+// @param	context	Context	自定义JWT负载	secret string JWT签名密钥
+// @return	tokenString string JWT字符串	err error 错误信息
 func Sign(context Context, secret string) (tokenString string, err error) {
-	// Load the jwt secret from the Gin config if the secret isn't specified.
+	// 未指定签名密钥时，从配置文件载入默认密钥
 	if secret == "" {
 		secret = viper.GetString("jwt_secret")
 	}
 
-	// The token content.
-	/*	官方字段
-		iss (issuer)：签发人
-		exp (expiration time)：过期时间
-		sub (subject)：主题
-		aud (audience)：受众
-		nbf (Not Before)：生效时间
-		iat (Issued At)：签发时间
-		jti (JWT ID)：编号
-	*/
+	//	The token content 官方字段
+	//	iss (issuer)：签发人
+	//	exp (expiration time)：过期时间
+	//	sub (subject)：主题
+	//	aud (audience)：受众
+	//	nbf (Not Before)：生效时间
+	//	iat (Issued At)：签发时间
+	//	jti (JWT ID)：编号
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":  context.ID,
+		"id":  context.ID, // 自定义字段，用户ID
 		"iat": time.Now().Unix(),
 		"nbf": time.Now().Unix(),
 		"exp": time.Now().Unix() + 7200, // 过期时间2h
@@ -47,18 +49,20 @@ func Sign(context Context, secret string) (tokenString string, err error) {
 	return
 }
 
-// 从参数中解析出token字符串
-// ParseRequest gets the token from the header and
-// pass it to the Parse function to parses the token.
+// @title	ParseRequest
+// @description	从参数中解析出token字符串，并进行token解析
+// @auth	高宏宇
+// @param	ctx *gin.Context
+// @return	*Context JWT负载部分内容指针	error 错误信息
 func ParseRequest(ctx *gin.Context) (*Context, error) {
 	// 获取请求参数中的token字符串
 	header := ctx.Request.Header.Get("Authorization")
 
-	// Load the jwt secret from config
+	// 从配置文件读取JWT签名密钥
 	secret := viper.GetString("jwt_secret")
 
+	// 请求未添加token
 	if len(header) == 0 {
-		// TODO Errorf中如果以大写字母开头就会报“error strings should not be capitalized”，why
 		log.Error("ParseRequest error", errno.New(errno.ErrorTokenInvalid, fmt.Errorf("the length of the `Authorization` header is zero")))
 		return &Context{}, errno.ErrorTokenInvalid
 	}
@@ -66,13 +70,16 @@ func ParseRequest(ctx *gin.Context) (*Context, error) {
 	return Parse(header, secret)
 }
 
-// Parse validates the token with the specified secret,
-// and returns the context if the token was valid.
+// @title	Parse
+// @description	根据给定密钥解析token字符串，如果token合法返回解析内容
+// @auth	高宏宇
+// @param	tokenString string token字符串	secret string JWT签名密钥
+// @return	*Context JWT负载部分内容指针	error 错误信息
 func Parse(tokenString string, secret string) (*Context, error) {
 	ctx := &Context{}
 
-	// Parse the token.
-	// TODO 不太懂这里第2个参数的含义
+	// 根据token字符串和签名密钥解析token，密钥来验证令牌的签名，确保令牌的完整性和真实性
+	// 自定义secretFunc密钥提供函数按照实际需求提供密钥
 	token, err := jwt.Parse(tokenString, secretFunc(secret))
 
 	// Parse error.
@@ -90,10 +97,14 @@ func Parse(tokenString string, secret string) (*Context, error) {
 	}
 }
 
-// secretFunc validates the secret format.
+// @title	secretFunc
+// @description	提供token签名验证密钥，同时检验token的加密方式
+// @auth	高宏宇
+// @param	secret string JWT签名密钥
+// @return	jwt.Keyfunc JWT签名密钥提供函数
 func secretFunc(secret string) jwt.Keyfunc {
 	return func(token *jwt.Token) (interface{}, error) {
-		// Make sure the `alg` is what we except.
+		// 类型断言，判断token.Method是否为*jwt.SigningMethodHMAC类型，即判断token使用的签名算法是否为HMAC算法
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
