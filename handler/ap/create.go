@@ -11,10 +11,14 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Create
+// @description	新建用户API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Create(ctx *gin.Context) {
 	log.Info("AP Create function called")
 
+	// 解析body参数
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -22,16 +26,17 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 改变user_id获取方式，或通过中间件实现
+	//获取登录用户ID
 	content, _ := token.ParseRequest(ctx)
+	// 查询用户
 	user, _ := model.GetUserById(content.ID)
-
+	// 查询用户所在场所ID
 	place_id := user.Place_id
 
 	// 创建AP前，其所在的网格点不一定存在。先查询所在网格点，当网格点不存在时，新建网格点
 	gridpoint, err := model.GetGridpoint(request.Coordinate_x, request.Coordinate_y, request.Coordinate_z, place_id)
 	if err != nil {
-		log.Error("gridpoint not exists, creating a new gridpoint", err)
+		log.Info("gridpoint not exists, creating a new gridpoint")
 
 		gridpoint = &model.Gridpoint{
 			Coordinate_x: request.Coordinate_x,
@@ -42,7 +47,7 @@ func Create(ctx *gin.Context) {
 			Updatedate:   time.Now(),
 		}
 
-		// TODO 网格点如果插入失败，这里直接return是否可以
+		// 创建网格点，并判断创建是否失败
 		if err := gridpoint.Create(); err != nil {
 			log.Error("gridpoint insert error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
@@ -62,12 +67,6 @@ func Create(ctx *gin.Context) {
 		Updatedate:    time.Now(),
 	}
 
-	// TODO 验证参数合法性
-	// if err := place.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
-
 	// 场所数据插入数据库
 	if err := ap.Create(); err != nil {
 		log.Error(errno.ErrorDatabase.Error(), err)
@@ -75,6 +74,7 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
+	// 响应数据
 	createResponse := CreateResponse{
 		Ap_id: ap.GetId(),
 	}

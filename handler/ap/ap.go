@@ -1,3 +1,4 @@
+// 接入点相关API所需请求响应结构
 package ap
 
 import (
@@ -5,22 +6,19 @@ import (
 	"time"
 )
 
-// 人工添加AP调用
-// ap相关api所需请求响应结构
+// 创建接入点API请求结构
 type CreateRequest struct {
 	Ssid  string `json:"ssid"`
 	Bssid string `json:"bssid"`
 	model.Coordinate
 }
 
+// 创建接入点API响应结构
 type CreateResponse struct {
 	Ap_id uint64 `json:"ap_id"`
 }
 
-type GetResponse struct {
-	Ap_list []model.Ap_Detail `json:"ap_list"`
-}
-
+// 修改接入点API请求结构
 type PutRequest struct {
 	Id           uint64  `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Ssid         string  `json:"ssid" gorm:"column:ssid;not null" binding:"required"`
@@ -30,6 +28,7 @@ type PutRequest struct {
 	Coordinate_z float64 `json:"coordinate_z" gorm:"column:coordinate_z;not null" binding:"required"`
 }
 
+// 修改接入点API响应结构
 type PutResponse struct {
 	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
 	Ssid         string    `json:"ssid" gorm:"column:ssid;not null" binding:"required"`

@@ -12,42 +12,49 @@ import (
 	"github.com/zxmrlc/log"
 )
 
+// @title	Get
+// @description	查询符合时间条件的接入点API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Get(ctx *gin.Context) {
 	log.Info("AP Get function called")
 
-	// TODO 改变user_id获取方式，或通过中间件实现
+	// 获取登录用户ID
 	content, _ := token.ParseRequest(ctx)
+	// 查询用户
 	user, _ := model.GetUserById(content.ID)
+	// 查询用户所在场所ID
 	place_id := user.Place_id
 
 	// 解析请求数据
-	begin_time_encode := ctx.Query("begin_time")
-	end_time_encode := ctx.Query("end_time")
+	begin_time_encode := ctx.Query("begin_time") // begin_time_encode: url安全格式编码
+	end_time_encode := ctx.Query("end_time")     // // end_time_encode: url安全格式编码
 
 	var ap_list_origin *[]model.Ap
 
-	if begin_time_encode != "" && end_time_encode != "" { // 有时间筛选条件
-		begin_time_decode, _ := url.QueryUnescape(begin_time_encode)
-		end_time_decode, _ := url.QueryUnescape(end_time_encode)
+	// 有时间筛选条件
+	if begin_time_encode != "" && end_time_encode != "" {
+
+		begin_time_decode, _ := url.QueryUnescape(begin_time_encode) // begin_time_decode: 原始时间字符串
+		end_time_decode, _ := url.QueryUnescape(end_time_encode)     // end_time_decode: 原始时间字符串
 		// 将字符串的时间转换为time.Time类型
-		// TODO begin_time 和 end_time解析出来后都是UTC时间，但mysql中的时区未必是UTC，这里需要解决一下
 		begin_time, _ := time.Parse(time.RFC3339, begin_time_decode)
 		end_time, _ := time.Parse(time.RFC3339, end_time_decode)
 
 		var err error
+		// 查询接入点
 		ap_list_origin, err = model.FilterApByTime(int(place_id), begin_time, end_time)
 		if err != nil {
-			// TODO 写入日志错误内容细化
 			log.Error("search ap_list_origin error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 			return
 		}
-	} else { // 无时间筛选条件
+		// 无时间筛选条件
+	} else {
 		// 请求ap_list数据
 		var err error
 		ap_list_origin, err = model.GetApByPlaceId(place_id)
 		if err != nil {
-			// TODO 写入日志错误内容细化
 			log.Error("search ap_list_origin error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 			return
