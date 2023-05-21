@@ -1,4 +1,3 @@
-// TODO 目前按照每次刷新位置都会上传一次，但从实际角度考虑这样太耗时，可以考虑本地缓存一定量后一并上传
 package pathpoint
 
 import (
@@ -12,11 +11,14 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Create
+// @description	新建路径点
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Create(ctx *gin.Context) {
 	log.Info("Pathpoint Create function called")
 
-	// 解析请求参数
+	// 解析body参数
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -24,10 +26,11 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 改变user_id获取方式，或通过中间件实现
+	// 获取登录用户ID
 	content, _ := token.ParseRequest(ctx)
+	// 查询用户
 	user, _ := model.GetUserById(content.ID)
-
+	// 查询用户所在场所ID
 	place_id := user.Place_id
 
 	// 创建路径点前，其所在的网格点不一定存在。查询所在网格点，当网格点不存在时，新建网格点
@@ -45,7 +48,6 @@ func Create(ctx *gin.Context) {
 			Updatedate:   time.Now(),
 		}
 
-		// TODO 网格点如果插入失败，这里直接return是否可以
 		if err := gridpoint.Create(); err != nil {
 			log.Error("gridpoint insert error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
@@ -53,7 +55,6 @@ func Create(ctx *gin.Context) {
 		}
 
 		// 新插入网格点需要获取id
-		// TODO 可以直接利用插入点时的返回值，可以少查询一次
 		gridpoint.Id = gridpoint.GetId()
 	}
 
@@ -65,22 +66,12 @@ func Create(ctx *gin.Context) {
 		Updatedate:    time.Now(),
 	}
 
-	// TODO 验证参数合法性
-	// if err := place.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
-
 	// 路径点数据插入数据库
 	if err := pathpoint.Create(); err != nil {
 		log.Error("pathpoint insert error", err)
 		handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 		return
 	}
-
-	// createResponse := CreateResponse{
-	// 	Id: gridpoint.GetId(),
-	// }
 
 	// 发送响应
 	handler.SendResponse(ctx, nil, nil)
