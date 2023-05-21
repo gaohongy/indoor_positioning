@@ -2,11 +2,12 @@ package gridpoint
 
 import "indoor_positioning/model"
 
-// place相关api所需请求响应结构
+// 创建网格点请求结构
 type CreateRequest struct {
 	model.Coordinate
 }
 
+// 创建网格点响应结构
 type CreateResponse struct {
 	Gridpoint_id uint64 `json:"gridpoint_id"`
 }

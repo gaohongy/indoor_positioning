@@ -11,10 +11,14 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Create
+// @description	新建网格点
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Create(ctx *gin.Context) {
 	log.Info("Gridpoint Create function called")
 
+	// 解析body参数
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -22,10 +26,11 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 改变user_id获取方式，或通过中间件实现
+	// 获取登录用户ID
 	content, _ := token.ParseRequest(ctx)
+	// 查询用户
 	user, _ := model.GetUserById(content.ID)
-
+	// 查询用户所在场所ID
 	place_id := user.Place_id
 
 	gridpoint := model.Gridpoint{
@@ -37,19 +42,14 @@ func Create(ctx *gin.Context) {
 		Updatedate:   time.Now(),
 	}
 
-	// TODO 验证参数合法性
-	// if err := place.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
-
-	// 场所数据插入数据库
+	// 创建网格点
 	if err := gridpoint.Create(); err != nil {
 		log.Error(errno.ErrorDatabase.Error(), err)
 		handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 		return
 	}
 
+	// 响应数据
 	createResponse := CreateResponse{
 		Gridpoint_id: gridpoint.GetId(),
 	}
