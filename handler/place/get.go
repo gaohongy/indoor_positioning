@@ -9,6 +9,10 @@ import (
 	"github.com/zxmrlc/log"
 )
 
+// @title	Get
+// @description	查询全部场所API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Get(ctx *gin.Context) {
 	log.Info("place Get function called")
 

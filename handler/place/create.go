@@ -10,10 +10,14 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Create
+// @description	新建场所API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Create(ctx *gin.Context) {
 	log.Info("Place Create function called")
 
+	// 解析body参数
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -28,12 +32,6 @@ func Create(ctx *gin.Context) {
 		Createdate:    time.Now(),
 		Updatedate:    time.Now(),
 	}
-
-	// TODO 验证参数合法性
-	// if err := place.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
 
 	// 场所数据插入数据库
 	if err := place.Create(); err != nil {
