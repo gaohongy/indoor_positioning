@@ -5,22 +5,24 @@ import (
 	"time"
 )
 
+// WiFi指纹信息
 type fingerPrint struct {
-	Bssid string  `json:"bssid"`
-	Rss   float64 `json:"rss"`
+	Bssid string  `json:"bssid"` // 基本服务集标识符
+	Rss   float64 `json:"rss"`   // 接收信号强度
 }
 
-// 这里的调用场景是：安卓端在添加参考点时，扫描到很多wifi信息，同时需要手动输入x、y、z，然后提交。所以表单中能接收到的数据就只有x、y、z，所需的场所id应当从token中进行解析
-// 在搜集rss信息时，会输入当前位置x，y，z，创建时会首先创建参考点，然后返回参考点id，用于创建rss
+// 创建参考点API请求数据结构
 type CreateRequest struct {
 	Rss_list []fingerPrint `json:"rss_list"`
 	model.Coordinate
 }
 
+// 创建参考点API响应数据结构
 type CreateResponse struct {
 	Referencepoint_id uint64 `json:"referencepoint_id"`
 }
 
+// 修改参考点API请求数据结构
 type PutRequest struct {
 	Id           uint64  `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id"`
 	Coordinate_x float64 `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`
@@ -28,6 +30,7 @@ type PutRequest struct {
 	Coordinate_z float64 `json:"coordinate_z" gorm:"column:coordinate_z;not null" binding:"required"`
 }
 
+// 修改参考点API响应数据结构
 type PutResponse struct {
 	Id           uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;column:id" json:"-"`
 	Coordinate_x float64   `json:"coordinate_x" gorm:"column:coordinate_x;not null" binding:"required"`

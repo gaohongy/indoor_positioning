@@ -11,7 +11,10 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Create
+// @description	新建参考点API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Create(ctx *gin.Context) {
 	log.Info("Referencepoint Create function called")
 
@@ -46,6 +49,7 @@ func Create(ctx *gin.Context) {
 			Updatedate:   time.Now(),
 		}
 
+		// 创建网格点
 		if err := gridpoint.Create(); err != nil {
 			log.Error("gridpoint insert error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
@@ -66,7 +70,7 @@ func Create(ctx *gin.Context) {
 	//------------------------------------------------------------------------------------------
 	// 创建rss条目
 	// 依次处理列表中的数据
-	flag := true
+	flag := true // 是否为第一次插入参考点
 	for _, fingerPrint := range request.Rss_list {
 		var ap_id uint64
 		// 查询ap_id,如果ap不存在，则跳过，这里没办法自动添加ap，因为要确定ap位置，必须要人工添加

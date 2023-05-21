@@ -11,24 +11,31 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Put
+// @description	修改参考点信息API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Put(ctx *gin.Context) {
 	log.Info("Referencepoint Put function called")
 
+	// 获取登录用户ID
 	content, _ := token.ParseRequest(ctx)
+	// 查询用户
 	user, _ := model.GetUserById(content.ID)
+	// 查询用户所在场所ID
 	place_id := user.Place_id
 
-	// 解析请求body
+	// 解析body参数
 	var request PutRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
 		handler.SendResponse(ctx, errno.ErrorBind, nil)
 		return
 	}
+	// 查询参考点
 	referencepoint, _ := model.GetReferencepointById(request.Id)
 
-	// 处理参考点
+	// 查询参考点
 	gridpoint, err := model.GetGridpoint(request.Coordinate_x, request.Coordinate_y, request.Coordinate_z, place_id)
 	// 查询结果为空err.Error() = "record not found"
 	if err != nil {
@@ -43,7 +50,6 @@ func Put(ctx *gin.Context) {
 			Updatedate:   time.Now(),
 		}
 
-		// TODO 网格点如果插入失败，这里直接return是否可以
 		if err := gridpoint.Create(); err != nil {
 			log.Error("gridpoint insert error", err)
 			handler.SendResponse(ctx, errno.ErrorDatabase, nil)
@@ -54,12 +60,14 @@ func Put(ctx *gin.Context) {
 		gridpoint.Id = gridpoint.GetId()
 	}
 
+	// 修改参考点信息
 	if err := referencepoint.Update(gridpoint.Id); err != nil {
 		log.Error("referencepoint update error", err)
 		handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 		return
 	}
 
+	// 查询更新后的参考点
 	referencepoint, _ = model.GetReferencepointById(request.Id)
 
 	putResopnse := PutResponse{
@@ -70,16 +78,6 @@ func Put(ctx *gin.Context) {
 		Createdate:   referencepoint.Createdate,
 		Updatedate:   referencepoint.Updatedate,
 	}
-
-	// TODO 验证参数合法性
-	// if err := user.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
-
-	// createResponse := CreateResponse{
-	// 	Username: request.Username,
-	// }
 
 	// 发送响应
 	handler.SendResponse(ctx, nil, putResopnse)
