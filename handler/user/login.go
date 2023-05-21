@@ -12,11 +12,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Create creates a new user account.
+// @title	Login
+// @description	用户登录API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Login(ctx *gin.Context) {
 	log.Info("User Login function called")
 
-	// Binding the data with the user struct.
+	// 解析body参数
 	var paraUser model.User
 	if err := ctx.Bind(&paraUser); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -24,24 +27,23 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	// Get the user information by the login username.
+	// 查询用户
 	dbUser, err := model.GetUserByUsername(paraUser.Username)
 	if err != nil {
-		// 如果需要写日志，需要写清详细信息-用户不存在，反馈给前端信息不能太详细
 		log.Error("username error", err)
 		// log.Infof("user (%s) is not found in database (%s)", paraUser.Username, viper.GetString("db.name"))
 		handler.SendResponse(ctx, errno.ErrorLogin, nil)
 		return
 	}
 
-	// Compare the login password with the user password.
+	// 校验用户密码
 	if err := auth.Compare(dbUser.Password, paraUser.Password); err != nil {
 		log.Error("password error", err)
 		handler.SendResponse(ctx, errno.ErrorLogin, nil)
 		return
 	}
 
-	// Sign the json web token.
+	// 签发令牌
 	token, err := token.Sign(token.Context{ID: dbUser.Id}, "")
 	if err != nil {
 		handler.SendResponse(ctx, errno.ErrorToken, nil)
@@ -53,6 +55,6 @@ func Login(ctx *gin.Context) {
 		Place_id: dbUser.Place_id,
 		Token:    token,
 	}
-	// TODO 返回数据中需要添加用户类型，以便app端可以选择跳转页面
+
 	handler.SendResponse(ctx, nil, loginResponse)
 }

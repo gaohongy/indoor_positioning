@@ -10,10 +10,14 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	Create
+// @description	新建用户API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func Create(ctx *gin.Context) {
 	log.Info("User Create function called")
 
+	// 解析body参数
 	var request CreateRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -23,7 +27,8 @@ func Create(ctx *gin.Context) {
 
 	// 检查是否存在同名用户
 	_, err := model.GetUserByUsername(request.Username)
-	if err == nil { // 用户已存在
+	// 用户已存在
+	if err == nil {
 		handler.SendResponse(ctx, errno.ErrorUsernameRepeat, nil)
 		return
 	}
@@ -35,12 +40,6 @@ func Create(ctx *gin.Context) {
 		Createdate: time.Now(),
 		Updatedate: time.Now(),
 	}
-
-	// TODO 验证参数合法性
-	// if err := user.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
 
 	// 加密用户密码
 	if err := user.Encrypt(); err != nil {

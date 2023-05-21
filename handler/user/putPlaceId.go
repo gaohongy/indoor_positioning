@@ -10,10 +10,14 @@ import (
 	"github.com/zxmrlc/log"
 )
 
-// Create creates a new user account.
+// @title	PutPlaceId
+// @description	登录用户修改自身场所API
+// @auth	高宏宇
+// @param	ctx *gin.Context
 func PutPlaceId(ctx *gin.Context) {
 	log.Info("User Put PlaceId function called")
 
+	// 解析body参数
 	var request PutPlaceIdRequest
 	if err := ctx.Bind(&request); err != nil {
 		log.Error(errno.ErrorBind.Error(), err)
@@ -21,24 +25,17 @@ func PutPlaceId(ctx *gin.Context) {
 		return
 	}
 
+	// 获取登录用户ID
 	content, _ := token.ParseRequest(ctx)
+	// 查询用户
 	user, _ := model.GetUserById(content.ID)
 
+	// 修改用户所在场所
 	if err := user.UpdateUserPlaceId(request.Place_id); err != nil {
 		log.Error("user update place_id error", err)
 		handler.SendResponse(ctx, errno.ErrorDatabase, nil)
 		return
 	}
-
-	// TODO 验证参数合法性
-	// if err := user.Validate(); err != nil {
-	// 	handler.SendResponse(ctx, errno.ErrorValidation, nil)
-	// 	return
-	// }
-
-	// createResponse := CreateResponse{
-	// 	Username: request.Username,
-	// }
 
 	// 发送响应
 	handler.SendResponse(ctx, nil, nil)
