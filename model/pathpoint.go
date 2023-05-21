@@ -62,7 +62,6 @@ func FilterPathpointByTimeAndUser(place_id int, user_id int, begin_time time.Tim
 // @return	*Pathpoint 路径点对象指针    error 错误信息
 func FilterLatestPathpointByUserId(user_id uint64) (*Pathpoint, error) {
 	pathpoint := &Pathpoint{}
-	// TODO find是查找第一条数据，这里要查询的是最近一次的路径点，应当是时间戳更大的，因此按照createdate降序desc排列拿到的第一条数据才是需要的，但是这里结果是反的，尚不清楚原因
 	db := DB.Mysql.Where("user_id = ?", user_id).Order("createdate").Find(&pathpoint)
 	return pathpoint, db.Error
 }

@@ -45,7 +45,6 @@ func (ap *Ap) Create() error {
 // @return	uint64	接入点ID
 func (ap *Ap) GetId() uint64 {
 	t := &Ap{}
-	// TODO 添加查询失败时的处理
 	db := DB.Mysql.Where("bssid = ?", ap.Bssid).Find(&t)
 	if db.Error != nil {
 		log.Error("ap.GetId() error", db.Error)
