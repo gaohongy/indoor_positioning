@@ -36,6 +36,7 @@ func Sign(context Context, secret string) (tokenString string, err error) {
 	//	nbf (Not Before)：生效时间
 	//	iat (Issued At)：签发时间
 	//	jti (JWT ID)：编号
+	// 	token: 包含头部和负载的JWT对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":  context.ID, // 自定义字段，用户ID
 		"iat": time.Now().Unix(),
@@ -43,7 +44,7 @@ func Sign(context Context, secret string) (tokenString string, err error) {
 		"exp": time.Now().Unix() + 7200, // 过期时间2h
 	})
 
-	// Sign the token with the specified secret.
+	// 使用密钥secret生成签名，生成最终令牌tokenString
 	tokenString, err = token.SignedString([]byte(secret))
 
 	return
