@@ -62,8 +62,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		u_pirvate_admin.GET("/location", user.GetLocation) // 获取用户最新的位置信息（private_admin）
 	}
 
-	// 无需认证的用户相关API
-	g.GET("/place", place.Get) // 获取用户列表（public）
+	// 无需认证的场所相关API
+	g.GET("/place", place.Get) // 获取场所列表（public）
 
 	// 需token认证，管理员和普通用户均可访问的场所相关API
 	p_private_all := g.Group("/place")
