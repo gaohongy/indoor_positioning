@@ -71,6 +71,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	{
 		p_private_all.POST("/gridpoint", gridpoint.Create) // 添加网格点（private_all)
 		p_private_all.POST("/pathpoint", pathpoint.Create) // 添加路径点（private_all)
+		p_private_all.GET("/map", place.GetMap)            // 查询场所对应地图ID（private_all）
 
 	}
 

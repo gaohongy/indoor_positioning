@@ -41,7 +41,28 @@ func (place *Place) GetId() uint64 {
 	t := &Place{}
 	DB.Mysql.Where("place_address = ?", place.Place_address).Find(&t)
 	return t.Id
+}
 
+// @title	GetMapId
+// @description	结构体方法，查询场所对应MapID
+// @auth	高宏宇
+// @receiver	place *Place 场所结构体对象指针
+// @return	uint64	场所ID
+func (place *Place) GetMapId() string {
+	t := &Place{}
+	DB.Mysql.Where("place_address = ?", place.Place_address).Find(&t)
+	return t.Map_id
+}
+
+// @title	GetPlaceById
+// @description	根据ID查询场所
+// @auth	高宏宇
+// @param	id uint64 场所ID
+// @return	*Place 场所对象指针    error 错误信息
+func GetPlaceById(id uint64) (*Place, error) {
+	place := &Place{}
+	db := DB.Mysql.Where("id = ?", id).Find(&place)
+	return place, db.Error
 }
 
 // @title	GetAllPlaces

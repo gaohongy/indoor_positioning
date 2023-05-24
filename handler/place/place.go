@@ -12,3 +12,8 @@ type CreateRequest struct {
 type CreateResponse struct {
 	Place_id uint64 `json:"place_id"`
 }
+
+// 获取场所对应地图ID响应数据结构
+type GetMapIdResponse struct {
+	Map_id string `json:"map_id"`
+}
