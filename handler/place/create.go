@@ -29,6 +29,7 @@ func Create(ctx *gin.Context) {
 		Place_address: request.Place_address,
 		Longitude:     request.Longitude,
 		Latitude:      request.Latitude,
+		Map_id:        request.Map_id,
 		Createdate:    time.Now(),
 		Updatedate:    time.Now(),
 	}

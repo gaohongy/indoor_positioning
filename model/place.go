@@ -10,6 +10,7 @@ type Place struct {
 	Place_address string    `json:"place_address" gorm:"column:place_address;not null" binding:"required"` // 场所详细地址
 	Longitude     float64   `json:"longitude" gorm:"column:longitude;not null" binding:"required"`         // 场所所在经度
 	Latitude      float64   `json:"latitude" gorm:"column:latitude;not null" binding:"required"`           // 场所所在纬度
+	Map_id        string    `json:"map_id" gorm:"map_id;not null"`                                         // 地图ID
 	Createdate    time.Time `gorm:"column:createdate"`                                                     // 创建时间
 	Updatedate    time.Time `gorm:"column:updatedate"`                                                     // 修改时间
 }

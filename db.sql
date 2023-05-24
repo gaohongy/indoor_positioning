@@ -7,6 +7,7 @@ CREATE TABLE `indoor_positioning`.`place`  (
   `place_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '场所详细地址',
   `longitude` decimal(10,6) NOT NULL COMMENT '经度',
   `latitude` decimal(10,6) NOT NULL COMMENT '纬度',
+  `map_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '地图id',
   `createdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updatedate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
